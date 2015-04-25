@@ -1,1 +1,6 @@
+# Files to exclude
+
+**/extensions/**/list
 **/extensions/list
+packages/*/extensions/list
+packages/**/extensions/list
