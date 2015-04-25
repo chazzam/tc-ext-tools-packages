@@ -1,0 +1,16 @@
+PACKAGE="pjproject"
+VERSION="2.3"
+SOURCE="http://www.pjsip.org/release/${VERSION}/pjproject-${VERSION}.tar.bz2"
+BUILD_DEPENDS="
+openssl-1.0.0
+openssl-1.0.0-dev"
+
+DESCRIPTION="PJSIP is a free and open source multimedia communication library"
+AUTHOR="pjsip
+SITE="http://www.pjsip.org/"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 2.3"

@@ -1,0 +1,81 @@
+From 365dd35c3c6a739f7d571ee88ceb903bdf70148b Mon Sep 17 00:00:00 2001
+From: Andy Whitcroft <apw@canonical.com>
+Date: Thu, 6 Jan 2011 18:42:23 +0000
+Subject: [PATCH] UBUNTU: SAUCE: ensure root is ready before running usermodehelpers in it
+
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+---
+ include/linux/init.h |    2 --
+ include/linux/kmod.h |    4 ++++
+ init/initramfs.c     |    6 ++++++
+ init/main.c          |    2 +-
+ 4 files changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/include/linux/init.h b/include/linux/init.h
+index 47235b8..1d34396 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -223,8 +223,6 @@ extern int initcall_debug;
+ 	static initcall_t __initcall_##fn \
+ 	__used __section(.security_initcall.init) = fn
+ 
+-extern struct list_head  populate_rootfs_domain;
+-
+ struct obs_kernel_param {
+ 	const char *str;
+ 	int (*setup_func)(char *);
+diff --git a/include/linux/kmod.h b/include/linux/kmod.h
+index 0da38cf..8a02da8 100644
+--- a/include/linux/kmod.h
++++ b/include/linux/kmod.h
+@@ -84,6 +84,8 @@ int call_usermodehelper_exec(struct subprocess_info *info, enum umh_wait wait);
+    to call call_usermodehelper_exec */
+ void call_usermodehelper_freeinfo(struct subprocess_info *info);
+ 
++extern void populate_rootfs_wait(void);
++
+ static inline int
+ call_usermodehelper_fns(char *path, char **argv, char **envp,
+ 			enum umh_wait wait,
+@@ -93,6 +95,8 @@ call_usermodehelper_fns(char *path, char **argv, char **envp,
+ 	struct subprocess_info *info;
+ 	gfp_t gfp_mask = (wait == UMH_NO_WAIT) ? GFP_ATOMIC : GFP_KERNEL;
+ 
++	populate_rootfs_wait();
++
+ 	info = call_usermodehelper_setup(path, argv, envp, gfp_mask);
+ 
+ 	if (info == NULL)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 1ecfa05..51192a4 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -572,6 +572,12 @@ static void __init clean_rootfs(void)
+ 
+ LIST_HEAD(populate_rootfs_domain);
+ 
++void populate_rootfs_wait(void)
++{
++	async_synchronize_full_domain(&populate_rootfs_domain);
++}
++EXPORT_SYMBOL(populate_rootfs_wait);
++
+ static void __init async_populate_rootfs(void)
+ {
+ 	char *err = unpack_to_rootfs(__initramfs_start, __initramfs_size);
+diff --git a/init/main.c b/init/main.c
+index 5d96791..1bc53d7 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -833,7 +833,7 @@ static int __init kernel_init(void * unused)
+ 	 * We need to ensure that the filesystem is ready by this point, wait for
+ 	 * async_populate_rootfs to complete.
+ 	 */
+-	async_synchronize_full_domain(&populate_rootfs_domain);
++	populate_rootfs_wait();
+ 
+ 	/*
+ 	 * check if there is an early userspace init.  If yes, let it do all
+-- 
+1.7.0.4
+

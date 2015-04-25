@@ -1,0 +1,67 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+MY_FLAGS="-m32 -mtune=generic -march=i686";
+CFLAGS="$CFLAGS $MY_FLAGS";
+CXXFLAGS="$CXXFLAGS $MY_FLAGS";
+export CFLAGS;
+export CXXFLAGS;
+          
+## configure
+build_configure() {
+
+  ## autotools
+  MY_FLAGS="-m32 -mtune=generic -march=i686";
+  CFLAGS="$CFLAGS $MY_FLAGS";
+  CXXFLAGS="$CXXFLAGS $MY_FLAGS";
+  export CFLAGS;
+  export CXXFLAGS;
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" ./configure --disable-xmldoc --host=i686-linux-gnu --target=i686-linux-gnu || exit 1
+
+}
+
+## compile
+build_compile() {
+
+  make menuselect-tree menuselect.makeopts >/dev/null;
+  ./menuselect/menuselect --enable app_test menuselect.makeopts
+  ./menuselect/menuselect --disable-category MENUSELECT_CORE_SOUNDS menuselect.makeopts
+  ./menuselect/menuselect --disable-category MENUSELECT_MOH menuselect.makeopts
+  ./menuselect/menuselect --disable-category MENUSELECT_EXTRA_SOUNDS menuselect.makeopts
+          
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" make || return 1
+
+}
+
+## install
+build_install() {
+
+   make DESTDIR="$I_ROOT" install config samples || return 1
+
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+   tet_configure
+   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+

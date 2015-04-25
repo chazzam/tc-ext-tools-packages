@@ -1,0 +1,70 @@
+From b942ae4b1e0d09b7833967ac6e7d8b5693475726 Mon Sep 17 00:00:00 2001
+From: Andy Whitcroft <apw@canonical.com>
+Date: Wed, 23 Dec 2009 16:43:07 +0000
+Subject: [PATCH] UBUNTU: SAUCE: async_populate_rootfs: move rootfs init earlier
+
+Check to see if the machine has more than one active CPU, if it does
+then it is worth starting the decode of the rootfs earlier.
+
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+---
+ include/asm-generic/vmlinux.lds.h |    1 +
+ include/linux/init.h              |    1 +
+ init/initramfs.c                  |   15 ++++++++++++++-
+ 3 files changed, 16 insertions(+), 1 deletions(-)
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index db22d13..83a73c3 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -623,6 +623,7 @@
+   	*(.initcall0s.init)						\
+   	*(.initcall1.init)						\
+   	*(.initcall1s.init)						\
++	*(.initcallearlyrootfs.init)					\
+   	*(.initcall2.init)						\
+   	*(.initcall2s.init)						\
+   	*(.initcall3.init)						\
+diff --git a/include/linux/init.h b/include/linux/init.h
+index a2b5b8a..47235b8 100644
+--- a/include/linux/init.h
++++ b/include/linux/init.h
+@@ -195,6 +195,7 @@ extern int initcall_debug;
+ 
+ #define core_initcall(fn)		__define_initcall("1",fn,1)
+ #define core_initcall_sync(fn)		__define_initcall("1s",fn,1s)
++#define earlyrootfs_initcall(fn)	__define_initcall("earlyrootfs",fn,rootfs)
+ #define postcore_initcall(fn)		__define_initcall("2",fn,2)
+ #define postcore_initcall_sync(fn)	__define_initcall("2s",fn,2s)
+ #define arch_initcall(fn)		__define_initcall("3",fn,3)
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 22712f9..1ecfa05 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -612,9 +612,22 @@ static void __init async_populate_rootfs(void)
+ 	return;
+ }
+ 
++static int __initdata rootfs_populated;
++
++static int __init populate_rootfs_early(void)
++{
++	if (num_online_cpus() > 1) {
++		rootfs_populated = 1;
++		async_schedule_domain(async_populate_rootfs, NULL,
++						&populate_rootfs_domain);
++	}
++}
+ static int __init populate_rootfs(void)
+ {
+-	async_schedule_domain(async_populate_rootfs, NULL, &populate_rootfs_domain);
++	if (!rootfs_populated)
++		async_schedule_domain(async_populate_rootfs, NULL,
++						&populate_rootfs_domain);
+ }
+ 
++earlyrootfs_initcall(populate_rootfs_early);
+ rootfs_initcall(populate_rootfs);
+-- 
+1.7.0.4
+

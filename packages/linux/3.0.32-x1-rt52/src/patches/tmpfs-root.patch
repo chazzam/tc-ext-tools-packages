@@ -1,0 +1,167 @@
+Subject: [PATCH] tmpfs-root
+
+I updated the patch from Ryan Hope <rmh3093@gmail.com> to 3.0.
+---
+ fs/Kconfig       |   21 +++++++++++++++++++++
+ fs/Makefile      |    1 +
+ fs/ramfs/inode.c |   39 +++++++++++++++++++++------------------
+ mm/shmem.c       |   25 +++++++++++++++++++++++++
+ 4 files changed, 68 insertions(+), 18 deletions(-)
+
+diff --git a/fs/Kconfig b/fs/Kconfig
+index 19891aa..2ae154e 100644
+--- a/fs/Kconfig
++++ b/fs/Kconfig
+@@ -151,6 +151,27 @@ config TMPFS_XATTR
+ 
+ 	  If unsure, say N.
+ 
++config TMPFS_ROOT
++	bool "Use tmpfs instrad of ramfs for initramfs"
++	depends on TMPFS && SHMEM
++	default n
++	help
++	  This replaces the ramfs used for unpacking the cpio images
++	  with tmpfs.
++
++	  If unsure, say N
++
++config RAMFS
++	bool "Ramfs file system support" if TMPFS_ROOT
++	default y
++	---help---
++	  Ramfs is a file system which keeps all files in RAM. Unlike tmpfs,
++	  it cannot be swapped to disk, and it has the risk of deadlocking
++	  the system by using all memory.
++
++	  Ramfs is used for booting the system and unpacking the cpio if
++	  TMPFS_ROOT is not set.
++
+ config HUGETLBFS
+ 	bool "HugeTLB file system support"
+ 	depends on X86 || IA64 || SPARC64 || (S390 && 64BIT) || \
+diff --git a/fs/Makefile b/fs/Makefile
+index fb68c2b..68db666 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -63,6 +63,7 @@ obj-$(CONFIG_DLM)		+= dlm/
+  
+ # Do not add any filesystems before this line
+ obj-$(CONFIG_FSCACHE)		+= fscache/
++obj-$(CONFIG_RAMFS)             += ramfs/
+ obj-$(CONFIG_REISERFS_FS)	+= reiserfs/
+ obj-$(CONFIG_EXT3_FS)		+= ext3/ # Before ext2 so root fs can be ext3
+ obj-$(CONFIG_EXT2_FS)		+= ext2/
+diff --git a/fs/ramfs/inode.c b/fs/ramfs/inode.c
+index eacb166..c3dbf22 100644
+--- a/fs/ramfs/inode.c
++++ b/fs/ramfs/inode.c
+@@ -261,6 +261,13 @@ struct dentry *ramfs_mount(struct file_system_type *fs_type,
+ 	return mount_nodev(fs_type, flags, data, ramfs_fill_super);
+ }
+ 
++static struct file_system_type ramfs_fs_type = {
++	.name		= "ramfs",
++	.mount		= ramfs_mount,
++	.kill_sb	= kill_litter_super,
++};
++
++#ifndef CONFIG_TMPFS_ROOT
+ static struct dentry *rootfs_mount(struct file_system_type *fs_type,
+ 	int flags, const char *dev_name, void *data)
+ {
+@@ -273,30 +280,12 @@ static void ramfs_kill_sb(struct super_block *sb)
+ 	kill_litter_super(sb);
+ }
+ 
+-static struct file_system_type ramfs_fs_type = {
+-	.name		= "ramfs",
+-	.mount		= ramfs_mount,
+-	.kill_sb	= ramfs_kill_sb,
+-};
+ static struct file_system_type rootfs_fs_type = {
+ 	.name		= "rootfs",
+ 	.mount		= rootfs_mount,
+ 	.kill_sb	= kill_litter_super,
+ };
+ 
+-static int __init init_ramfs_fs(void)
+-{
+-	return register_filesystem(&ramfs_fs_type);
+-}
+-
+-static void __exit exit_ramfs_fs(void)
+-{
+-	unregister_filesystem(&ramfs_fs_type);
+-}
+-
+-module_init(init_ramfs_fs)
+-module_exit(exit_ramfs_fs)
+-
+ int __init init_rootfs(void)
+ {
+ 	int err;
+@@ -311,5 +300,19 @@ int __init init_rootfs(void)
+ 
+ 	return err;
+ }
++#endif
++
++static int __init init_ramfs_fs(void)
++{
++	return register_filesystem(&ramfs_fs_type);
++}
++
++static void __exit exit_ramfs_fs(void)
++{
++	unregister_filesystem(&ramfs_fs_type);
++}
++
++module_init(init_ramfs_fs)
++module_exit(exit_ramfs_fs)
+ 
+ MODULE_LICENSE("GPL");
+diff --git a/mm/shmem.c b/mm/shmem.c
+index fcedf54..57d22f1 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -2669,6 +2669,10 @@ static void init_once(void *foo)
+ 
+ static int init_inodecache(void)
+ {
++#ifdef CONFIG_TMPFS_ROOT
++	if (shmem_inode_cachep)
++		return 0;
++#endif
+ 	shmem_inode_cachep = kmem_cache_create("shmem_inode_cache",
+ 				sizeof(struct shmem_inode_info),
+ 				0, SLAB_PANIC, init_once);
+@@ -3015,6 +3019,27 @@ put_memory:
+ }
+ EXPORT_SYMBOL_GPL(shmem_file_setup);
+ 
++#ifdef CONFIG_TMPFS_ROOT
++static struct dentry *rootfs_mount(struct file_system_type *fs_type,
++	int flags, const char *dev_name, void *data)
++{
++	return mount_nodev(fs_type, flags, data, shmem_fill_super);
++}
++
++static struct file_system_type rootfs_fs_type = {
++	.name		= "rootfs",
++	.mount		= rootfs_mount,
++	.kill_sb	= kill_litter_super,
++};
++
++int __init init_rootfs(void)
++{
++	if (init_inodecache())
++		panic("Can't initialize shm inode cache");
++	return register_filesystem(&rootfs_fs_type);
++}
++#endif
++
+ /**
+  * shmem_zero_setup - setup a shared anonymous mapping
+  * @vma: the vma to be mmapped is prepared by do_mmap_pgoff
+-- 

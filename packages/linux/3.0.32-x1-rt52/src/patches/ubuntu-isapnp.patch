@@ -1,0 +1,56 @@
+From 3c5d9716d8b0abd8a1aad9dae08c0b1962e7191c Mon Sep 17 00:00:00 2001
+From: Andy Whitcroft <apw@canonical.com>
+Date: Wed, 2 Dec 2009 14:41:53 +0000
+Subject: [PATCH] UBUNTU: SAUCE: isapnp_init: make isa PNP scans occur async
+
+The results of scanning for devices is to trigger udev events therefore
+we can push this processing async.
+
+This reduces kernel initialisation time (the time from bootloader to
+starting userspace) by several 10ths of a second x86 32bit systems.
+
+Signed-off-by: Andy Whitcroft <apw@canonical.com>
+---
+ drivers/pnp/isapnp/core.c |   12 +++++++++++-
+ 1 files changed, 11 insertions(+), 1 deletions(-)
+
+diff --git a/drivers/pnp/isapnp/core.c b/drivers/pnp/isapnp/core.c
+index 918d5f0..972fde6 100644
+--- a/drivers/pnp/isapnp/core.c
++++ b/drivers/pnp/isapnp/core.c
+@@ -41,6 +41,7 @@
+ #include <linux/init.h>
+ #include <linux/isapnp.h>
+ #include <linux/mutex.h>
++#include <linux/async.h>
+ #include <asm/io.h>
+ 
+ #include "../base.h"
+@@ -1001,7 +1002,7 @@ struct pnp_protocol isapnp_protocol = {
+ 	.disable = isapnp_disable_resources,
+ };
+ 
+-static int __init isapnp_init(void)
++static int __init real_isapnp_init(void)
+ {
+ 	int cards;
+ 	struct pnp_card *card;
+@@ -1095,6 +1096,15 @@ static int __init isapnp_init(void)
+ 	return 0;
+ }
+ 
++static void __init async_isapnp_init(void *unused, async_cookie_t cookie)
++{
++	(void)real_isapnp_init();
++}
++
++static int __init isapnp_init(void)
++{
++       async_schedule(async_isapnp_init, NULL);
++}
+ device_initcall(isapnp_init);
+ 
+ /* format is: noisapnp */
+-- 
+1.7.0.4
+

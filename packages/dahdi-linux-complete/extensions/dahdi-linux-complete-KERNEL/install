@@ -1,0 +1,7 @@
+etc
+lib
+usr/lib/*.so*
+usr/local/lib/
+usr/sbin
+usr/share/dahdi
+

@@ -1,0 +1,74 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+RELEASE_PREFIX="usr/local/share/core-release";
+
+download_tc_files() {
+  # $1 - download via URL
+  # $2 - dir for saving download
+  # also: corepure64.gz{,.md5.txt} and vmlinuz64{,.md5.txt}
+  old_dir="$(pwd)";
+  dl_dir="${RELEASE_PREFIX}/${2}";
+  mkdir -p "$dl_dir";
+  cd "$dl_dir";
+  for dl in $DL_FILES; do 
+    wget "${1}/${dl}" -O "$dl";
+  done;
+  md5sum -c *.md5.txt;
+  if [ $? -ne 0 ]; then
+    echo "md5sum failed in $2";
+    exit 1;
+  fi
+  cd "$old_dir";
+}
+
+## install
+build_install() {
+
+#   make DESTDIR="$I_ROOT" install || return 1
+   orig_dir="$(pwd)";
+   echo "root: $I_ROOT";
+   mkdir "$I_ROOT";
+   cd "$I_ROOT";
+   for release_ver in "4.x" "5.x" "6.x"; do
+     path_tail="${release_ver}/x86/release/distribution_files";
+     DL_FILES="vmlinuz.md5.txt vmlinuz core.gz.md5.txt core.gz";
+     download_tc_files "http://tinycorelinux.net/${path_tail}" "$path_tail"
+     
+     path_tail="$(echo $path_tail|sed -e 's#/x86/#/x86_64/#;')";
+     DL_FILES="vmlinuz64.md5.txt vmlinuz64 corepure64.gz.md5.txt corepure64.gz";
+     download_tc_files "http://tinycorelinux.net/${path_tail}" "$path_tail"
+     # exception for 4.x x86_64
+     if [ "$release_ver" == "4.x" ]; then
+       download_tc_files "http://tinycorelinux.net/4.x/x86_64" "$path_tail"
+     fi
+     
+   done;
+   cd "$orig_dir";
+}
+
+## rules
+build_rules() {
+
+   tet_load
+#   tet_download
+#   tet_convert
+#   tet_unpack
+#   tet_patch
+#   tet_configure
+#   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+

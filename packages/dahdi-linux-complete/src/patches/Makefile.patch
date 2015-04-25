@@ -1,0 +1,11 @@
+--- tools/Makefile	2014-11-17 20:14:53.262630198 +0000
++++ tools/Makefile	2014-11-17 20:15:19.709311806 +0000
+@@ -130,6 +130,8 @@
+ 
+ GENERATED_DOCS	:= $(GROFF_HTML) README.html README.Astribank.html
+ 
++TEST_BINS += fxstest
++
+ all: prereq programs
+ 
+ libs: $(LTZ_SO) $(LTZ_A)

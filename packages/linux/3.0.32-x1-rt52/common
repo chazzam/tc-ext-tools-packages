@@ -1,0 +1,6 @@
+KERNEL_ARCH=x86
+KERNEL_VER="${KERNEL%%-*}"
+KERNEL_MIRROR="http://www.kernel.org/pub/linux/kernel/v3.0"
+LINUX_SOURCE="linux-${KERNEL_VER}.tar.xz"
+KERNEL_CONFIG="config-${KERNEL}"
+LINUX_DIR="linux-${KERNEL_VER}"

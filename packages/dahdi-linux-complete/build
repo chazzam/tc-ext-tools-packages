@@ -1,0 +1,56 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+## compile
+build_compile() {
+
+   make || return 1
+   cd tools
+   make tests fxstest || return 1
+   cd ..
+
+}
+
+## install
+build_install() {
+
+   mkdir -p ${I_ROOT}/etc/init.d/ || return 1
+   make DESTDIR="$I_ROOT" install config || return 1
+   cd tools
+   make DESTDIR="$I_ROOT" install-tests || return 1
+   cd ..
+
+   # fix the kernel modules
+   local kernel_mod_path="${I_ROOT}/lib/modules/${KERNEL}";
+   if [ -d "${kernel_mod_path}" ]; then
+      local tmp="$(echo ${kernel_mod_path}/*|sed -r -e s/modules\.\(alias\|dep\|symbols\)//g;)";
+      mkdir -p "${kernel_mod_path}/kernel";
+      mv $tmp "${kernel_mod_path}/kernel/" 2> /dev/null;
+   fi;
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+#   tet_configure
+   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+

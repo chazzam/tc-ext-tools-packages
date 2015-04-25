@@ -1,0 +1,14 @@
+compiletc.tcz
+squashfs-tools-4.x.tcz
+tar.tcz
+wget.tcz
+xz.tcz
+intltool.tcz
+perl_xml_parser.tcz
+gettext.tcz
+libtool.tcz
+libtool-dev.tcz
+autoconf.tcz
+automake.tcz
+zsync.tcz
+

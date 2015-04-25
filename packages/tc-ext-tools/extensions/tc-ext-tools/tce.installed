@@ -1,0 +1,18 @@
+#!/bin/sh
+TCUSER=`cat /etc/sysconfig/tcuser`
+TCHOME="/home/$TCUSER";
+
+# source tc-ext-tools shell environment functions in user's b?ashrc
+for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
+  [ -f "$shrc" ] || touch "$shrc"
+  if ! grep tet-functions $shrc >/dev/null; then
+    echo "Applying changes to shell environment"
+    echo "You need to relogin or reboot your computer for changes to take effect"
+    echo ". /etc/init.d/tet-functions" >> $shrc
+  fi
+done
+
+install -D -m 644 /usr/local/share/tet/config.sample "$TCHOME/.config/tet.conf"
+
+chown $TCUSER:staff -R "$TCHOME/.config/tet.conf" 
+

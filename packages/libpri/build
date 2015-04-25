@@ -1,0 +1,71 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+## compile
+build_compile() {
+
+   ## cmake
+   #cd build
+   make || return 1
+
+   ## python
+   #python setup.py build || return 1
+
+   ## jam
+   #jam || return 1
+
+   ## waf
+   #./waf build || return 1
+
+   ## scons
+   #scons || return 1
+
+}
+
+## install
+build_install() {
+
+   ## cmake
+   #cd build
+   make DESTDIR="$I_ROOT" install || return 1
+   #make INSTALL_ROOT="$I_ROOT" install || return 1
+
+   ## python
+   #python setup.py install --prefix=/usr/local --root="$I_ROOT" || return 1
+
+   ## jam
+   #DESTDIR="$I_ROOT" jam install || return 1
+
+   ## waf
+   #./waf install --destdir="$I_ROOT" || return 1
+
+   ## scons
+   #scons prefix="/usr/local" install_root="$I_ROOT/usr/local" install || return 1
+
+
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+

@@ -1,0 +1,12 @@
+--- linux-2.6.34/scripts/Makefile.lib
++++ linux-2.6.34/scripts/Makefile.lib
+@@ -204,7 +204,8 @@
+ # ---------------------------------------------------------------------------
+ 
+ quiet_cmd_gzip = GZIP    $@
+-cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -n -f -9 > $@) || \
++cmd_gzip = (cat $(filter-out FORCE,$^) | gzip -f -9 > $@) && \
++	( which advdef > /dev/null && advdef -z $@ ; true ) || \
+ 	(rm -f $@ ; false)
+ 
+

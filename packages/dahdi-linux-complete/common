@@ -1,0 +1,20 @@
+PACKAGE="dahdi-linux-complete"
+VERSION="2.10.0.1+2.10.0.1"
+SOURCE="http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/releases/dahdi-linux-complete-${VERSION}.tar.gz"
+BUILD_DEPENDS="
+libnewt
+libnewt-dev
+module-init-tools
+perl5
+linux-headers-KERNEL
+"
+
+DESCRIPTION="DAHDI telephony interface for telephony devices used by e.g. the Asterisk PBX software."
+AUTHOR="asterisk.org"
+SITE="http://www.asterisk.org"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 2.10.0.1+2.10.0.1"

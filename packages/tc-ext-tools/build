@@ -1,0 +1,47 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+
+## install
+build_install() {
+
+  # remove the install.sh script
+
+  # handle copying the scripts to various places within /opt
+  #  via a Makefile in the src/ directory of the package
+
+  # add a /usr/local/tce.installed/tc-ext-tools script
+  #  to handle modifying ash profile etc.
+  #  make sure its executable
+
+  # mv config.sample to .config ?
+  cp ${PACKAGE_SRC}/Makefile . 
+  make DESTDIR="$I_ROOT" install || return 1
+
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+#   tet_configure
+#   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+

@@ -1,0 +1,11 @@
+--- include/asterisk/autoconfig.h.in	2015-01-19 16:45:11.599185362 +0000
++++ include/asterisk/autoconfig.h.in	2015-01-19 16:46:00.835860021 +0000
+@@ -583,7 +583,7 @@
+ 
+ /* Define to 1 if PJPROJECT has the PJSIP Transaction Group Lock Support
+    feature. */
+-#undef HAVE_PJ_TRANSACTION_GRP_LOCK
++#define HAVE_PJ_TRANSACTION_GRP_LOCK 1
+ 
+ /* Define to 1 if your system defines IP_PKTINFO. */
+ #undef HAVE_PKTINFO

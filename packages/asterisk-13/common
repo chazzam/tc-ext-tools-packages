@@ -1,0 +1,31 @@
+PACKAGE="asterisk-13"
+VERSION="13.1-cert1-rc2"
+SOURCE="http://downloads.asterisk.org/pub/telephony/certified-asterisk/releases/certified-asterisk-${VERSION}.tar.gz"
+BUILD_DEPENDS="
+openssl-1.0.0
+openssl-1.0.0-dev
+sqlite3
+sqlite3-dev
+libcap
+dahdi-linux-complete-KERNEL
+dahdi-linux-complete-dev
+libpri
+libpri-dev
+libjansson
+libjansson-dev
+libxml2
+libxml2-dev
+libxslt
+pjproject
+"
+
+DESCRIPTION="Open Source Private Branch Exchange (PBX)"
+AUTHOR="asterisk.org"
+
+SITE="http://www.asterisk.org"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 13.1-cert1-rc2"

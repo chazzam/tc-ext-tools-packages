@@ -1,0 +1,12 @@
+diff -Nur linux-2.6.33/fs/squashfs/super.c b/fs/squashfs/super.c
+--- linux-2.6.33/fs/squashfs/super.c	2010-02-24 20:52:17.000000000 +0200
++++ b/fs/squashfs/super.c	2010-02-24 23:39:16.933441905 +0200
+@@ -124,7 +124,7 @@
+ 	sb->s_magic = le32_to_cpu(sblk->s_magic);
+ 	if (sb->s_magic != SQUASHFS_MAGIC) {
+ 		if (!silent)
+-			ERROR("Can't find a SQUASHFS superblock on %s\n",
++			WARNING("Can't find a SQUASHFS superblock on %s\n",
+ 						bdevname(sb->s_bdev, b));
+ 		err = -EINVAL;
+ 		goto failed_mount;
