@@ -1,7 +1,7 @@
 #!/bin/sh
 TCUSER=`cat /etc/sysconfig/tcuser`
 TCHOME="/home/$TCUSER"
-TCSOURCE="/opt/tc-ext-tools"
+TCSOURCE="/usr/local/share/tc-ext-tools"
 
 # modify sources in /opt/tc-ext-tools/packages/ to accomodate deps changing
 TC_VERSION="$(cat /usr/share/doc/tc/release.txt)"
