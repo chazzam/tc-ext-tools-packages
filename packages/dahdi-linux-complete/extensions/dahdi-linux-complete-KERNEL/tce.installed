@@ -1,0 +1,3 @@
+#!/bin/sh
+# Remove unsupported modules
+sed -i -e 's/(xpp_usb|wcfxo|wcte11xp|wct1xxp)/#\1/' /etc/dahdi/modules

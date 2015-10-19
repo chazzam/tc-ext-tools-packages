@@ -1,0 +1,17 @@
+Change the dependencies of the associated .dep files
+in order to change the version of DAHDI to be used.
+
+Examples:
+
+
+Using dahdi-linux-complete:
+  dahdi-complete.tcz.dep:
+    dahdi-linux-complete-KERNEL.tcz
+
+  dahdi-complete-dev.tcz.dep:
+    dahdi-linux-complete-dev.tcz
+
+Using dahdi from git:
+  dahdi-complete.tcz.dep:
+    dahdi-git-linux-KERNEL.tcz
+    dahdi-git-tools.tcz

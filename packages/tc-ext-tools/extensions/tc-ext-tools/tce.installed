@@ -12,6 +12,8 @@ for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
   fi
 done
 
+echo etc/init.d/tet-functions >> /opt/.filetool.lst
+
 install -D -m 644 /usr/local/share/tet/config.sample "$TCHOME/.config/tet.conf"
 
 chown $TCUSER:staff -R "$TCHOME/.config/tet.conf" 

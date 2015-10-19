@@ -1,0 +1,15 @@
+diff --git tools/dahdi.init tools/dahdi.init
+index 68420c7..513f074 100755
+--- tools/dahdi.init
++++ tools/dahdi.init
+@@ -59,6 +59,10 @@ then
+     system=debian
+ fi
+ 
++if [ -f /opt/tcemirror ]; then
++    system=debian
++fi
++
+ # Source function library.
+ if [ $system = redhat ]; then
+     . $initdir/functions || exit 0

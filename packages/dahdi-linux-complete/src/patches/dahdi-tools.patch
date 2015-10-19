@@ -1,13 +1,14 @@
 diff --git tools/xpp/perl_modules/Dahdi/Config/Gen.pm tools/xpp/perl_modules/Dahdi/Config/Gen.pm
-index cc439de..e627ffe 100644
+index cc439de..9e698a4 100644
 --- tools/xpp/perl_modules/Dahdi/Config/Gen.pm
 +++ tools/xpp/perl_modules/Dahdi/Config/Gen.pm
-@@ -215,6 +215,15 @@ sub new($) {
+@@ -215,6 +215,16 @@ sub new($) {
  		pri_termtype
  		pri_connection_type
  		em_signalling
 +		loopback
 +		patgen
++		bri_term
 +		term_nt
 +		term_te
 +		disable_echo
@@ -18,7 +19,7 @@ index cc439de..e627ffe 100644
  		);
  	foreach my $k (@trivial) {
  		$gconfig->{$k} = $p->item($k);
-@@ -237,6 +246,126 @@ sub run_generator($$@) {
+@@ -237,6 +247,126 @@ sub run_generator($$@) {
  	if($@) {
  		die "Failed to load configuration generator for '$name': $@\n";
  	}
@@ -42,8 +43,8 @@ index cc439de..e627ffe 100644
 +		$spans_all .= $sep.$span->num;
 +	}
 +	# Expand (upper_half, lower_half, all, 1) to span numbers
-+	foreach my $p (qw(timing_master clear_channels term_nt term_te disable_echo
-+		loopback patgen)
++	foreach my $p (qw(timing_master clear_channels term_nt term_te bri_term
++		loopback patgen disable_echo)
 +	) {
 +		next unless (exists($gconfig->{$p}));
 +		next if ($gconfig->{$p} eq "" or $gconfig->{$p} eq "0");
@@ -227,10 +228,17 @@ index c00e3eb..97f2d71 100644
  	select $old;
  }
 diff --git tools/xpp/perl_modules/Dahdi/Config/Gen/System.pm tools/xpp/perl_modules/Dahdi/Config/Gen/System.pm
-index cb7b14b..f24a5b3 100644
+index cb7b14b..fc3ec2b 100644
 --- tools/xpp/perl_modules/Dahdi/Config/Gen/System.pm
 +++ tools/xpp/perl_modules/Dahdi/Config/Gen/System.pm
-@@ -24,6 +24,10 @@ sub print_echo_can($$) {
+@@ -18,12 +18,17 @@ sub new($$$) {
+ }
+ 
+ my $bri_te_last_timing = 1;
++my $te_last_name = "";
+ 
+ sub print_echo_can($$) {
+ 	my $gconfig = shift || die;
  	my $chans = shift || die; # channel or range of channels.
  	my $echo_can = $gconfig->{'echo_can'};
  	return if !defined($echo_can) || $echo_can eq 'none';
@@ -241,7 +249,7 @@ index cb7b14b..f24a5b3 100644
  
  	print "echocanceller=$echo_can,$chans\n";
  }
-@@ -41,7 +45,7 @@ sub gen_t1_cas($$) {
+@@ -41,7 +46,7 @@ sub gen_t1_cas($$) {
  	my $pri_connection_type = $gconfig->{pri_connection_type} || die;
  	die "Span #$num is analog" unless $span->is_digital();
  	die "Span #$num is not CAS" unless $span->is_pri && $pri_connection_type eq 'CAS';
@@ -250,7 +258,7 @@ index cb7b14b..f24a5b3 100644
  	my $timing;
  	my $lbo = 0;
  	my $framing = $gconfig->{tdm_framing};
-@@ -55,7 +59,14 @@ sub gen_t1_cas($$) {
+@@ -55,7 +60,21 @@ sub gen_t1_cas($$) {
  	$span_crc4 = (defined $span_crc4) ? ",$span_crc4" : '';
  	my $span_yellow = $span->yellow();
  	$span_yellow = (defined $span_yellow) ? ",$span_yellow" : '';
@@ -258,6 +266,13 @@ index cb7b14b..f24a5b3 100644
 +	my $sep = quotemeta($gconfig->{'span_separator'});
 +	my $span_rx_str = $sep.$span->num;
 +	$span_rx_str = qr/$span_rx_str($sep|$)/;
++	# Timing starts over at 1 every time we start on a new card
++	my $span_basename = $span->name;
++	$span_basename =~ s/\/[0-9]+$//;
++	if ($te_last_name ne $span_basename) {
++		$bri_te_last_timing = 1;
++		$te_last_name = $span_basename;
++	}
 +	if ($gconfig->{'timing_master'} =~ $span_rx_str) {
 +		$timing = 0;
 +	} else {
@@ -266,7 +281,7 @@ index cb7b14b..f24a5b3 100644
  	printf "span=%d,%d,%d,%s,%s%s%s\n",
  			$num,
  			$timing,
-@@ -68,14 +79,25 @@ sub gen_t1_cas($$) {
+@@ -68,14 +87,25 @@ sub gen_t1_cas($$) {
  	my $dchan_type;
  	my $chan_range;
  	if($span->is_pri()) {
@@ -282,7 +297,7 @@ index cb7b14b..f24a5b3 100644
 +					$chan_range = Dahdi::Config::Gen::channo_range(
 +						(Dahdi::Config::Gen::parse_chan_range($chan_range),
 +						$span->dchan()->num())
-+          );
++					);
 +				}
 +				printf "clear=%s\n", $chan_range;
 +			}
@@ -297,7 +312,7 @@ index cb7b14b..f24a5b3 100644
  			printf "cas=%s:$idle_bits\n", $chan_range;
  		} elsif ($pri_connection_type eq 'CAS' ) {
  			my $type = ($termtype eq 'TE') ? 'FXO' : 'FXS';
-@@ -102,7 +124,7 @@ sub gen_digital($$$) {
+@@ -102,7 +132,7 @@ sub gen_digital($$$) {
  	my $span = shift || die;
  	my $num = $span->num() || die;
  	die "Span #$num is analog" unless $span->is_digital();
@@ -306,7 +321,7 @@ index cb7b14b..f24a5b3 100644
  	my $timing;
  	my $lbo = 0;
  	my $framing = $span->framing() || die "$0: No framing information for span #$num\n";
-@@ -121,7 +143,14 @@ sub gen_digital($$$) {
+@@ -121,7 +151,28 @@ sub gen_digital($$$) {
  		$span_crc4 = '';
  		$framing = 'cas';
  	}
@@ -314,15 +329,29 @@ index cb7b14b..f24a5b3 100644
 +	my $sep = quotemeta($gconfig->{'span_separator'});
 +	my $span_rx_str = $sep.$span->num;
 +	$span_rx_str = qr/$span_rx_str($sep|$)/;
++	# Timing starts over at 1 every time we start on a new card
++	my $span_basename = $span->name;
++	$span_basename =~ s/\/[0-9]+$//;
++	if ($te_last_name ne $span_basename) {
++		$bri_te_last_timing = 1;
++		$te_last_name = $span_basename;
++	}
 +	if ($gconfig->{'timing_master'} =~ $span_rx_str) {
 +		$timing = 0;
 +	} else {
 +		$timing = ($termtype eq 'NT') ? 0 : $bri_te_last_timing++;
 +	}
++	# If bri_term is set, then apply iff it is set for this span
++	if ($gconfig->{'bri_term'} =~ $span_rx_str) {
++		$span_termination = ',term';
++	} elsif ($gconfig->{'bri_term'} !~ /^0$/) {
++		$span_termination = '';
++	}
++
  	printf "span=%d,%d,%d,%s,%s%s%s%s%s\n",
  			$num,
  			$timing,
-@@ -158,13 +187,26 @@ sub gen_digital($$$) {
+@@ -158,13 +209,26 @@ sub gen_digital($$$) {
  		my $dchan = $span->dchan();
  		printf "$dchan_type=%d\n", $dchan->num();
  	} elsif($span->is_pri()) {
@@ -337,7 +366,7 @@ index cb7b14b..f24a5b3 100644
 +					$chan_range = Dahdi::Config::Gen::channo_range(
 +						(Dahdi::Config::Gen::parse_chan_range($chan_range),
 +						$span->dchan()->num())
-+          );
++					);
 +				}
 +				printf "clear=%s\n", $chan_range;
 +			}
@@ -353,7 +382,7 @@ index cb7b14b..f24a5b3 100644
  			printf "dchan=%d\n", $span->dchan()->num();
  		}
  	} else {
-@@ -218,8 +260,26 @@ sub generate($$$) {
+@@ -218,8 +282,26 @@ sub generate($$$) {
  # This file is parsed by the Dahdi Configurator, dahdi_cfg
  #
  HEAD
@@ -380,7 +409,7 @@ index cb7b14b..f24a5b3 100644
  		if($span->is_digital) {
  			if($span->is_pri) {
  				if($gconfig->{'pri_connection_type'} eq 'CAS') {
-@@ -239,10 +299,20 @@ HEAD
+@@ -239,10 +321,20 @@ HEAD
  						unless defined $type;
  					$chan->type($type);
  				}
@@ -402,10 +431,10 @@ index cb7b14b..f24a5b3 100644
  	print <<"TAIL";
  # Global data
 diff --git tools/xpp/perl_modules/Dahdi/Config/Params.pm tools/xpp/perl_modules/Dahdi/Config/Params.pm
-index 0cc0d88..229d3b9 100644
+index 0cc0d88..f83b508 100644
 --- tools/xpp/perl_modules/Dahdi/Config/Params.pm
 +++ tools/xpp/perl_modules/Dahdi/Config/Params.pm
-@@ -116,6 +116,15 @@ sub item($$@) {
+@@ -116,6 +116,16 @@ sub item($$@) {
  			pri_connection_type	=> 'PRI',
  			r2_idle_bits		=> '1101',
  			tdm_framing		=> 'esf',
@@ -413,6 +442,7 @@ index 0cc0d88..229d3b9 100644
 +			patgen			=> '0',
 +			term_nt			=> '0',
 +			term_te			=> '0',
++			bri_term		=> '0',
 +			timing_master		=> '0',
 +			disable_echo		=> '0',
 +			clear_channels		=> '0',
@@ -421,28 +451,8 @@ index 0cc0d88..229d3b9 100644
  			'pri_termtype'		=> [ 'SPAN/* TE' ],
  		);
  	return $self->{$key} if exists($self->{$key}) or $options{NODEFAULTS};
-@@ -153,4 +162,3 @@ sub dump($) {
+@@ -153,4 +163,3 @@ sub dump($) {
  }
  
  1;
--
-diff --git tools/dahdi.init tools/dahdi.init
-index 2b77fd3..68c45e0 100755
---- tools/dahdi.init
-+++ tools/dahdi.init
-@@ -59,6 +59,10 @@ then
-     system=debian
- fi
- 
-+if [ -f /opt/tcemirror ]; then
-+    system=debian
-+fi
-+
- # Source function library.
- if [ $system = redhat ]; then
-     . $initdir/functions || exit 0
-@@ -332,4 +336,3 @@ case "$1" in
- esac
- 
- exit $RETVAL
 -

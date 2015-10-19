@@ -1,5 +1,5 @@
 PACKAGE="asterisk-11"
-VERSION="11.6-cert9"
+VERSION="11.6-cert11"
 SOURCE="http://downloads.asterisk.org/pub/telephony/certified-asterisk/releases/certified-asterisk-${VERSION}.tar.gz"
 BUILD_DEPENDS="
 openssl-1.0.0
@@ -7,8 +7,8 @@ openssl-1.0.0-dev
 sqlite3
 sqlite3-dev
 libcap
-dahdi-linux-complete-KERNEL
-dahdi-linux-complete-dev
+dahdi-complete
+dahdi-complete-dev
 libpri
 libpri-dev
 "
@@ -18,7 +18,7 @@ AUTHOR="asterisk.org"
 SITE="http://www.asterisk.org"
 COPYING="GPL-2"
 MAINTAINERS="chazzam"
-TAGS=""
+TAGS="COPY2FS"
 COMMENTS="---"
 CHANGELOG="---"
-CURRENT="First Version: 11.6-cert9"
+CURRENT="First Version: 11.6-cert11"

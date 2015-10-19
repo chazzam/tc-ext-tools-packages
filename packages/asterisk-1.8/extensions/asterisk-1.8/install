@@ -3,3 +3,9 @@ etc/
 var/
 x-usr/include
 x-usr/share/man/
+x-usr/lib/asterisk/modules/cel_custom.so
+x-usr/lib/asterisk/modules/cel_manager.so
+x-usr/lib/asterisk/modules/chan_iax2.so
+x-usr/lib/asterisk/modules/res_calendar.so
+x-usr/lib/asterisk/modules/res_fax.so
+
