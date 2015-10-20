@@ -6,7 +6,7 @@ openssl-1.0.0
 openssl-1.0.0-dev"
 
 DESCRIPTION="PJSIP is a free and open source multimedia communication library"
-AUTHOR="pjsip
+AUTHOR="pjsip"
 SITE="http://www.pjsip.org/"
 COPYING="GPL-2"
 MAINTAINERS="chazzam"
