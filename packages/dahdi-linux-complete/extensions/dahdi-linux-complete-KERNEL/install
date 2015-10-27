@@ -4,4 +4,20 @@ usr/lib/*.so*
 usr/local/lib/
 usr/sbin
 usr/share/dahdi
+x-usr/sbin/dahdi_tool
+x-usr/sbin/dahdi_monitor
+x-usr/sbin/dahdi_speed
+x-usr/sbin/dahdi_test
+x-usr/sbin/astribank_is_starting
+x-usr/sbin/fxotune
+x-usr/sbin/fxstest
+x-usr/sbin/hdlcgen
+x-usr/sbin/hdlcstress
+x-usr/sbin/hdlctest
+x-usr/sbin/hdlcverify
+x-usr/sbin/sethdlc
+x-usr/sbin/timertest
+x-usr/sbin/twinstar
+x-usr/sbin/xpp_blink
+x-usr/sbin/xpp_sync
 
