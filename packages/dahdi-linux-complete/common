@@ -1,7 +1,9 @@
 PACKAGE="dahdi-linux-complete"
-VERSION="2.10.2+2.10.2"
+#VERSION="2.10.2+2.10.2"
+VERSION="2.11.0-rc1+2.11.0-rc1"
 SOURCE="http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/releases/dahdi-linux-complete-${VERSION}.tar.gz"
 BUILD_DEPENDS="
+automake
 libnewt
 libnewt-dev
 module-init-tools
@@ -16,5 +18,5 @@ COPYING="GPL-2"
 MAINTAINERS="chazzam"
 TAGS=""
 COMMENTS="---"
-CHANGELOG="---"
-CURRENT="First Version: 2.10.2+2.10.2"
+CHANGELOG="First Version: 2.10.2+2.10.2"
+CURRENT="Updated to: ${VERSION}"

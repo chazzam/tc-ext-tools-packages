@@ -1,0 +1,32 @@
+--- tools/Makefile.am	2015-10-27 23:02:42.052552504 +0000
++++ tools/Makefile.am	2015-10-27 23:08:23.942561838 +0000
+@@ -37,15 +37,15 @@
+ 	dahdi_cfg \
+ 	dahdi_speed \
+ 	dahdi_scan \
+-	fxotune
+-
+-noinst_PROGRAMS	= \
++	fxotune \
+ 	fxstest \
+ 	patgen \
+ 	pattest \
+ 	patlooptest \
+ 	dahdi_diag \
+ 	timertest
+ 
++noinst_PROGRAMS	= 
++
+ dist_sbin_SCRIPTS	= \
+ 	dahdi_span_assignments \
+ 	dahdi_waitfor_span_assignments \
+@@ -54,7 +54,7 @@
+ 
+if PBX_HDLC
+sbin_PROGRAMS	+= sethdlc
+-noinst_PROGRAMS += hdlcstress hdlctest hdlcgen hdlcverify
++sbin_PROGRAMS += hdlcstress hdlctest hdlcgen hdlcverify
+endif
+ 
+# Libtool versioning for libtonezone:
+      

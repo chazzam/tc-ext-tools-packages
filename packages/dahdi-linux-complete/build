@@ -7,10 +7,19 @@
 ## compile
 build_compile() {
 
-   make || return 1
-   cd tools
-   make tests fxstest || return 1
-   cd ..
+   if [ ! -f tools/Makefile ]; then
+     # DAHDI >= 2.11.0
+     patch -p0 < ${PACKAGE_SRC}/patches/Makefile.am.patch || return 1
+     ( cd tools; aclocal; autoscan; autoupdate; autoreconf -i; )
+     make || return 1
+   else
+     # DAHDI pre 2.11.0
+     patch -p0 < ${PACKAGE_SRC}/patches/Makefile.patch || return 1
+     make || return 1
+     cd tools
+     make tests fxstest || return 1
+     cd ..
+   fi;  
 
 }
 
@@ -19,9 +28,15 @@ build_install() {
 
    mkdir -p ${I_ROOT}/etc/init.d/ || return 1
    make DESTDIR="$I_ROOT" install config || return 1
-   cd tools
-   make DESTDIR="$I_ROOT" install-tests || return 1
-   cd ..
+   if [ "$(grep 'tests:' Makefile)" != "" ]; then
+      # Handle DAHDI pre 2.11.0
+      cd tools
+      make DESTDIR="$I_ROOT" install-tests || return 1
+      cd ..
+   fi;
+   
+   # Add a link to the TC version as the debian version to fix the init script
+   ln -s "$I_ROOT/usr/share/doc/tc/release.txt" /etc/debian_version
 
    # fix the kernel modules
    local kernel_mod_path="${I_ROOT}/lib/modules/${KERNEL}";
