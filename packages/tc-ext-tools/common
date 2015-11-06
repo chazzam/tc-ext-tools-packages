@@ -1,5 +1,5 @@
 PACKAGE="tc-ext-tools"
-VERSION="git"
+VERSION="20151105"
 SOURCE="git::https://github.com/chazzam/tc-ext-tools.git"
 BUILD_DEPENDS="
 "
