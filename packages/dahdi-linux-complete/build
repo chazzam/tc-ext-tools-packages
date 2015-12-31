@@ -27,6 +27,13 @@ build_compile() {
 build_install() {
 
    mkdir -p ${I_ROOT}/etc/init.d/ || return 1
+   (
+      # Fix 2.11.0+2.11.0 bug
+      cd tools/xpp/
+      touch dahdi_registration.8 xpp_sync.8 lsdahdi.8 xpp_blink.8 \
+         dahdi_genconf.8 dahdi_hardware.8 twinstar.8 astribank_tool.8 \
+         astribank_hexload.8 astribank_allow.8 astribank_is_starting.8
+   )
    make DESTDIR="$I_ROOT" install config || return 1
    if [ "$(grep 'tests:' Makefile)" != "" ]; then
       # Handle DAHDI pre 2.11.0

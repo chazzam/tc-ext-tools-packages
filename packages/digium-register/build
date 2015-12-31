@@ -4,39 +4,41 @@
 #                                                                                          #
 ############################################################################################
 
-## configure
-build_configure() {
-
-   ./configure --enable-shared --disable-sound --disable-video \
-     --disable-opencore-amr --disable-resample --prefix=/usr/local || return 1
-
+build_download() {
+  wget --no-check-certificate "$SOURCE/register" || return 1
+  wget --no-check-certificate "$SOURCE/asthostid" || return 1
+}
+build_convert() {
+  echo "$(pwd;ls)"
+  cd ..
+  tar -cJf "$PACKAGE_SOURCE_NAME_CONV" register asthostid || return 1
+  mv -f "$PACKAGE_SOURCE_NAME_CONV" "$_PACKAGE_SRC" || return 1
+  rm register asthostid
 }
 
 ## compile
 build_compile() {
-
-   cd pjproject
-   make dep || return 1
-   make || return 1
+  echo "no compilation necessary"
 }
 
 ## install
 build_install() {
-
-   make DESTDIR="$I_ROOT" install || return 1
-
+  mkdir -p "${I_ROOT}/usr/local/bin" || return 1
+  cp register asthostid "${I_ROOT}/usr/local/bin/"
+  chmod +x "${I_ROOT}/usr/local/bin/register" "${I_ROOT}/usr/local/bin/asthostid"
 }
 
 ## rules
 build_rules() {
 
    tet_load
+   tet_prepare
    tet_download
    tet_convert
    tet_unpack
    tet_patch
-   tet_configure
-   tet_compile
+#   tet_configure
+#   tet_compile
    tet_install
    tet_split
    tet_strip
