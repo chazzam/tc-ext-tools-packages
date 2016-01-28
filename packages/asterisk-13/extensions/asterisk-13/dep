@@ -1,9 +1,6 @@
-openssl-1.0.0.tcz
+openssl.tcz
 sqlite3.tcz
 libcap.tcz
-libpri.tcz
-dahdi-complete.tcz
-libjansson.tcz
 libxml2.tcz
 libxslt.tcz
-pjproject.tcz
+libjansson.tcz

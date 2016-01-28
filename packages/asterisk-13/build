@@ -31,16 +31,48 @@ build_compile() {
   ./menuselect/menuselect --disable-category MENUSELECT_CORE_SOUNDS menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_MOH menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_EXTRA_SOUNDS menuselect.makeopts
-          
-  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" make || return 1
+  ./menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts
 
+  local make_j=""
+  if [ "$(free -m 2>&1|sed 's#\s\+# #g'|head -n2|tail -n1|cut -d\  -f2)" -ge "3900" ]; then
+    make_j="$(cat /proc/cpuinfo|grep processor|wc -l)";
+    make_j="$(eval $make_j + 1)";
+    make_j="-j $make_j"
+  fi
+
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" make $make_j|| return 1
+
+}
+
+include_addon() {
+  local base_url="$1"
+  local tarball="$2"
+  
+  wget --no-check-certificate "$base_url/$tarball" -O $tarball|| return 1
+  tar -zxf $tarball || return 1;
+  cd ${tarball%%.tar.gz}
+  cp *.so "${I_ROOT}/usr/lib/asterisk/modules/" || return 1
+  cp *.conf.sample "${I_ROOT}/etc/asterisk/"
+  cd ..
 }
 
 ## install
 build_install() {
 
-   make DESTDIR="$I_ROOT" install config samples || return 1
-
+  make DESTDIR="$I_ROOT" install config samples || return 1
+  
+  local arch_bits=${KERNEL_ARCH_DASH##x86-}
+  local arch_full=$KERNEL_ARCH
+  echo "Kernel arch: $KERNEL_ARCH"
+  [ "$arch_full" = "x86" ] && arch_full="x86_32";
+  # Get dpma
+  local dpma_base_url="http://downloads.digium.com/pub/telephony/res_digium_phone"
+  local dpma_tar=res_digium_phone-${ASTERISK_BRANCH}_${DPMA_VERSION}-$arch_full.tar.gz
+  include_addon "$dpma_base_url/asterisk-${ASTERISK_BRANCH}/$KERNEL_ARCH_DASH" "$dpma_tar" || return 1
+  # Get g729
+  local base_url="http://downloads.digium.com/pub/telephony/codec_g729"
+  local tarball="codec_g729a-${ASTERISK_BRANCH}_${G729_VERSION}-generic_${arch_bits}.tar.gz"
+  include_addon "$base_url/asterisk-${ASTERISK_BRANCH}/$KERNEL_ARCH_DASH" "$tarball" || return 1
 }
 
 ## rules

@@ -1,0 +1,2 @@
+usr/lib/asterisk/modules/res_digium_phone.so
+usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_dpma.so
