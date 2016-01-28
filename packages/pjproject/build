@@ -8,7 +8,9 @@
 build_configure() {
 
    ./configure --enable-shared --disable-sound --disable-video \
-     --disable-opencore-amr --disable-resample --prefix=/usr/local || return 1
+     --with-external-speex --with-external-srtp --with-external-gsm \
+     --disable-opencore-amr --disable-resample --prefix=/usr/local \
+     CFLAGS='-DNDEBUG' || return 1
 
 }
 
