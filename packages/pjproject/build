@@ -6,9 +6,13 @@
 
 ## configure
 build_configure() {
-
+  # The recommended way, per asterisk wiki
+  # ./configure --enable-shared --disable-sound --disable-video \
+  #   --with-external-speex --with-external-srtp --with-external-gsm \
+  #   --disable-opencore-amr --disable-resample --prefix=/usr/local \
+  
+  # eh, whatever works
    ./configure --enable-shared --disable-sound --disable-video \
-     --with-external-speex --with-external-srtp --with-external-gsm \
      --disable-opencore-amr --disable-resample --prefix=/usr/local \
      CFLAGS='-DNDEBUG' || return 1
 
