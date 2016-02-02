@@ -43,7 +43,7 @@ build_install() {
    fi;
    
    # Add a link to the TC version as the debian version to fix the init script
-   ln -s "$I_ROOT/usr/share/doc/tc/release.txt" "$I_ROOT/etc/debian_version"
+   ln -s "/usr/share/doc/tc/release.txt" "$I_ROOT/etc/debian_version"
 
    # fix the kernel modules
    local kernel_mod_path="${I_ROOT}/lib/modules/${KERNEL}";
@@ -63,7 +63,7 @@ build_install() {
       cp tools/dahdi.init "$I_ROOT/etc/init.d/dahdi";
    fi
    # Remove unsupported modules
-   sed -i -e 's/^\(wct1xxp\|wcte11xp\|wcfxo\|wctdm\|xpp_usb\)/#\1/' "$I_ROOT/etc/dahdi/modules"
+   sed -i -e 's/^\(wct1xxp\|wcte11xp\|wcfxo\|wctdm$\|xpp_usb\)/#\1/' "$I_ROOT/etc/dahdi/modules"
 }
 
 ## rules
