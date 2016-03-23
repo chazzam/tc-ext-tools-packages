@@ -1,6 +1,6 @@
 PACKAGE="dahdi-linux-complete"
 #VERSION="2.10.2+2.10.2"
-VERSION="2.11.0+2.11.0"
+VERSION="2.11.1+2.11.1"
 SOURCE="http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/releases/dahdi-linux-complete-${VERSION}.tar.gz"
 BUILD_DEPENDS="
 automake
