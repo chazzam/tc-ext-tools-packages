@@ -2,8 +2,8 @@ PACKAGE="asterisk-1.8"
 VERSION="1.8.28-cert5"
 SOURCE="http://downloads.asterisk.org/pub/telephony/certified-asterisk/releases/certified-asterisk-${VERSION}.tar.gz"
 BUILD_DEPENDS="
-openssl-1.0.0
-openssl-1.0.0-dev
+openssl
+openssl-dev
 sqlite3
 sqlite3-dev
 libcap
