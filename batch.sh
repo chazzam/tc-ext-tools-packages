@@ -6,6 +6,6 @@ if [ -z "$1" ]; then
 fi;
 
 for pkg in $@; do
-  [ "$(echo $pkg|cut -c1-8)"="asterisk" ] && sudo rm -rf ../storage/linux/;
+  [ "$(echo $pkg|cut -c1-8)" = "asterisk" ] && sudo rm -rf ../storage/linux/;
   buildit $pkg && cleanit $pkg;
 done;

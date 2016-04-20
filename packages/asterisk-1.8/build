@@ -7,6 +7,8 @@
 MY_FLAGS="-m32 -mtune=generic -march=i686";
 CFLAGS="$CFLAGS $MY_FLAGS";
 CXXFLAGS="$CXXFLAGS $MY_FLAGS";
+LDFLAGS="$LDFLAGS -z muldefs";
+export LDFLAGS;
 export CFLAGS;
 export CXXFLAGS;
           
@@ -19,7 +21,7 @@ build_configure() {
   CXXFLAGS="$CXXFLAGS $MY_FLAGS";
   export CFLAGS;
   export CXXFLAGS;
-  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" ./configure --disable-xmldoc --host=i686-linux-gnu --target=i686-linux-gnu || exit 1
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" ./configure --disable-xmldoc --host=i686-linux-gnu --target=i686-linux-gnu || exit 1
 
 }
 
@@ -27,12 +29,13 @@ build_configure() {
 build_compile() {
 
   make menuselect-tree menuselect.makeopts >/dev/null;
+  ./menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts
   ./menuselect/menuselect --enable app_test menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_CORE_SOUNDS menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_MOH menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_EXTRA_SOUNDS menuselect.makeopts
           
-  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" make || return 1
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" make || return 1
 
 }
 

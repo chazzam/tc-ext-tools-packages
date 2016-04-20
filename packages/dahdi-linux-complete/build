@@ -7,6 +7,10 @@
 ## compile
 build_compile() {
 
+   if [ ! -f /usr/bin/perl ]; then
+     sudo ln -s /usr/local/bin/perl /usr/bin/perl;
+   fi;
+
    if [ ! -f tools/Makefile ]; then
      # DAHDI >= 2.11.0
      patch -p0 < ${PACKAGE_SRC}/patches/Makefile.am.patch || return 1

@@ -7,8 +7,10 @@
 MY_FLAGS="-m32 -mtune=generic -march=i686";
 CFLAGS="$CFLAGS $MY_FLAGS";
 CXXFLAGS="$CXXFLAGS $MY_FLAGS";
+  LDFLAGS="$LDFLAGS -z muldefs";
 export CFLAGS;
 export CXXFLAGS;
+  export LDFLAGS;
           
 ## configure
 build_configure() {
@@ -17,9 +19,11 @@ build_configure() {
   MY_FLAGS="-m32 -mtune=generic -march=i686";
   CFLAGS="$CFLAGS $MY_FLAGS";
   CXXFLAGS="$CXXFLAGS $MY_FLAGS";
+  LDFLAGS="$LDFLAGS -z muldefs";
   export CFLAGS;
   export CXXFLAGS;
-  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" ./configure --disable-xmldoc --host=i686-linux-gnu --target=i686-linux-gnu || exit 1
+  export LDFLAGS;
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" ./configure --disable-xmldoc --host=i686-linux-gnu --target=i686-linux-gnu || exit 1
 
 }
 
@@ -34,13 +38,13 @@ build_compile() {
   ./menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts
 
   local make_j=""
-  if [ "$(free -m 2>&1|sed 's#\s\+# #g'|head -n2|tail -n1|cut -d\  -f2)" -ge "3900" ]; then
+  if [ "$(free -m 2>&1|sed 's#\s\+# #g'|head -n2|tail -n1|cut -d\  -f2)" -ge "3000" ]; then
     make_j="$(cat /proc/cpuinfo|grep processor|wc -l)";
     make_j="$(eval $make_j + 1)";
     make_j="-j $make_j"
   fi
 
-  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" make $make_j|| return 1
+  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" make $make_j|| return 1
 
 }
 
