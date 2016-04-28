@@ -38,7 +38,7 @@ build_compile() {
   ./menuselect/menuselect --disable BUILD_NATIVE menuselect.makeopts
 
   local make_j=""
-  if [ "$(free -m 2>&1|sed 's#\s\+# #g'|head -n2|tail -n1|cut -d\  -f2)" -ge "3000" ]; then
+  if [ "$(free -m 2>&1|sed 's#\s\+# #g'|head -n2|tail -n1|cut -d\  -f2)" -ge "3600" ]; then
     make_j="$(cat /proc/cpuinfo|grep processor|wc -l)";
     make_j="$(eval $make_j + 1)";
     make_j="-j $make_j"
