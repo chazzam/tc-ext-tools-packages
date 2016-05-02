@@ -1,0 +1,75 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+build_convert() {
+  echo "$(pwd;ls)"
+  cd ..
+  tar -cJf "$PACKAGE_SOURCE_NAME_CONV" rebuild_links.sh || return 1
+  mv -f "$PACKAGE_SOURCE_NAME_CONV" "$_PACKAGE_SRC" || return 1
+  rm rebuild_links.sh
+}
+
+build_configure() {
+  echo "no configuration needed";
+}
+
+## compile
+build_compile() {
+  echo "no compilation needed";
+}
+
+download_sounds() {
+  local langs="$1";
+  local tarball="$2";
+  local dir="$3";
+  local wget="wget -w2 --random-wait -nv --show-progress --no-check-certificate -O-";
+  local l;
+
+  for l in $langs; do
+    local dl="${URL_ASTERISK_SOUNDS%%/}/${tarball/LANGUAGE/$l}";
+    local dir_lang=${dir%%/}/$l;
+    mkdir "$dir_lang";
+    for f in $FORMATS; do
+      $wget -- ${dl/FORMAT/$f} 2>/dev/null| tar -zx -C $dir_lang;
+    done;
+  done;
+}
+
+build_install() {
+  ( 
+    cd $I_ROOT;
+    DIR_SOUNDS=${DIR_SOUNDS##/};
+    DIR_MOH=${DIR_MOH##/};
+    mkdir -p $DIR_SOUNDS $DIR_MOH;
+    download_sounds "$LANGUAGES_CORE" "${TARBALL_CORE/VERSION/VERSION_CORE}" "$DIR_SOUNDS" || exit 1;
+    download_sounds "$LANGUAGES_EXTRA" "${TARBALL_EXTRA/VERSION/VERSION_EXTRA}" "$DIR_SOUNDS" || exit 1;
+    download_sounds "$LANGUAGES_MOH" "${TARBALL_MOH/VERSION/VERSION_MOH}" "$DIR_MOH" || exit 1;
+    exit 0;
+  ) || return 1;
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+   tet_configure
+   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+

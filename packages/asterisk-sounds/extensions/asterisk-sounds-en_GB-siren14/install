@@ -1,0 +1,6 @@
+var/lib/asterisk/sounds/en_GB/*.siren14
+var/lib/asterisk/sounds/en_GB/*/*.siren14
+var/lib/asterisk/sounds/en_GB/CHANGES*
+var/lib/asterisk/sounds/en_GB/CREDITS*
+var/lib/asterisk/sounds/en_GB/LICENSE*
+var/lib/asterisk/sounds/en_GB/*.txt

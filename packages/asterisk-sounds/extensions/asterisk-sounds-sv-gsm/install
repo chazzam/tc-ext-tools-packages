@@ -1,0 +1,6 @@
+var/lib/asterisk/sounds/sv/*.gsm
+var/lib/asterisk/sounds/sv/*/*.gsm
+var/lib/asterisk/sounds/sv/CHANGES*
+var/lib/asterisk/sounds/sv/CREDITS*
+var/lib/asterisk/sounds/sv/LICENSE*
+var/lib/asterisk/sounds/sv/*.txt

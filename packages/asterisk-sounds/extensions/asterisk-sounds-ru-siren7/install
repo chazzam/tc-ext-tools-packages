@@ -1,0 +1,6 @@
+var/lib/asterisk/sounds/ru/*.siren7
+var/lib/asterisk/sounds/ru/*/*.siren7
+var/lib/asterisk/sounds/ru/CHANGES*
+var/lib/asterisk/sounds/ru/CREDITS*
+var/lib/asterisk/sounds/ru/LICENSE*
+var/lib/asterisk/sounds/ru/*.txt

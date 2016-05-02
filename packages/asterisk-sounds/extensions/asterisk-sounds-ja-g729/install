@@ -1,0 +1,6 @@
+var/lib/asterisk/sounds/ja/*.g729
+var/lib/asterisk/sounds/ja/*/*.g729
+var/lib/asterisk/sounds/ja/CHANGES*
+var/lib/asterisk/sounds/ja/CREDITS*
+var/lib/asterisk/sounds/ja/LICENSE*
+var/lib/asterisk/sounds/ja/*.txt
