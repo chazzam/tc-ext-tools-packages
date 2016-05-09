@@ -1,0 +1,53 @@
+#!/bin/sh
+TCUSER=`cat /etc/sysconfig/tcuser`
+TCHOME="/home/$TCUSER";
+GIT_FOLDER="tc-ext-tools"
+GIT_REPO="https://github.com/chazzam/${GIT_FOLDER}.git"
+
+[ -d "$TCHOME/src" ] || mkdir "$TCHOME/src";
+cd "$TCHOME/src";
+git clone $GIT_REPO;
+cd $GIT_FOLDER;
+chown $TCUSER:staff -R "./" 
+
+#cp config.sample .config;
+#./install.sh;
+
+DESTDIR="$TCHOME/.local"
+BINDIR="$DESTDIR/bin"
+SYSCONFDIR="$DESTDIR/etc"
+DATADIR="$DESTDIR/share"
+CONFDIR="$TCHOME/.config"
+
+mkdir -p "$BINDIR" "$CONFDIR" "$SYSCONFDIR/init.d" "$DATADIR/tet" 2>/dev/null
+
+chmod 755 tools/* common/*functions;
+chmod 644 common/config common/build;
+
+ln -s tools/* "$BINDIR"
+ln -s common/config "$SYSCONFDIR/tet.conf"
+ln -s common/build "$DATADIR/tet/build.sample"
+ln -s common/functions "$DATADIR/tet/functions.sh"
+ln -s common/tet-functions "$SYSCONFDIR/init.d/tet-functions"
+sudo ln -sf common/tet-functions "/etc/init.d/tet-functions"
+
+# Actually copy the config file so we can edit it as needed.
+install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
+
+
+# source tc-ext-tools shell environment functions in user's b?ashrc
+for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
+  [ -f "$shrc" ] || touch "$shrc"
+  if ! grep tet-functions $shrc >/dev/null; then
+    echo "Applying changes to shell environment"
+    echo "You need to relogin or reboot your computer for changes to take effect"
+    echo ". /etc/init.d/tet-functions" >> $shrc
+  fi
+done
+
+if [ ! grep tet-functions /opt/.filetool.lst ]; then
+  echo etc/init.d/tet-functions >> /opt/.filetool.lst
+fi;
+
+
+

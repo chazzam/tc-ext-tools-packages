@@ -9,6 +9,7 @@ build_install() {
 
    cp ${PACKAGE_SRC}/Makefile .
    make DESTDIR="$I_ROOT" install || return 1
+   cp ${PACKAGE_SRC}/README "$I_ROOT"
 
 }
 

@@ -1,0 +1,24 @@
+#!/bin/sh
+TCUSER=`cat /etc/sysconfig/tcuser`
+TCHOME="/home/$TCUSER"
+TCSOURCE="$TCHOME/src"
+GIT_FOLDER="tc-ext-tools-packages"
+GIT_REPO="https://github.com/chazzam/$GIT_FOLDER.git"
+TET="$TCHOME/tc-ext-tools";
+TET_PKGS="$TCHOME/$TET/packages";
+
+# Checkout the git repo into a $HOME/src directory
+[ -d "$TCSOURCE" ] || mkdir -p "$TCSOURCE";
+cd $"TCSOURCE"
+git clone $GIT_REPO;
+cd $GIT_FOLDER;
+chown $TCUSER:staff -R "./" 
+
+# symlink the packages into the tc-ext-tools directory
+[ -d "$TET_PKGS" ] || mkdir -p "$TET_PKGS"
+ln -s packages/* "$TET_PKGS/";
+ln -s batch.sh "$TET/"
+
+. $TCHOME/.ashrc
+sudo -u $TCUSER update-tet-database
+
