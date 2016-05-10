@@ -1,17 +1,16 @@
 #!/bin/sh
 TCUSER=`cat /etc/sysconfig/tcuser`
 TCHOME="/home/$TCUSER";
-GIT_FOLDER="tc-ext-tools"
-GIT_REPO="https://github.com/chazzam/${GIT_FOLDER}.git"
+TCSOURCE="$TCHOME/src";
+GIT_FOLDER="tc-ext-tools";
+GIT_REPO="https://github.com/chazzam/${GIT_FOLDER}.git";
+GIT_DIR="$TCSOURCE/$GIT_FOLDER";
 
-[ -d "$TCHOME/src" ] || mkdir "$TCHOME/src";
-cd "$TCHOME/src";
+[ -d "$TCSOURCE" ] || mkdir "$TCSOURCE";
+cd "$TCSOURCE";
 git clone $GIT_REPO;
 cd $GIT_FOLDER;
 chown $TCUSER:staff -R "./" 
-
-#cp config.sample .config;
-#./install.sh;
 
 DESTDIR="$TCHOME/.local"
 BINDIR="$DESTDIR/bin"
@@ -24,12 +23,12 @@ mkdir -p "$BINDIR" "$CONFDIR" "$SYSCONFDIR/init.d" "$DATADIR/tet" 2>/dev/null
 chmod 755 tools/* common/*functions;
 chmod 644 common/config common/build;
 
-ln -s tools/* "$BINDIR"
-ln -s common/config "$SYSCONFDIR/tet.conf"
-ln -s common/build "$DATADIR/tet/build.sample"
-ln -s common/functions "$DATADIR/tet/functions.sh"
-ln -s common/tet-functions "$SYSCONFDIR/init.d/tet-functions"
-sudo ln -sf common/tet-functions "/etc/init.d/tet-functions"
+ln -s $GIT_DIR/tools/* "$BINDIR"
+ln -s $GIT_DIR/common/config "$SYSCONFDIR/tet.conf"
+ln -s $GIT_DIR/common/build "$DATADIR/tet/build.sample"
+ln -s $GIT_DIR/common/functions "$DATADIR/tet/functions.sh"
+ln -s $GIT_DIR/common/tet-functions "$SYSCONFDIR/init.d/tet-functions"
+sudo ln -sf $GIT_DIR/common/tet-functions "/etc/init.d/tet-functions"
 
 # Actually copy the config file so we can edit it as needed.
 install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
@@ -48,6 +47,4 @@ done
 if [ ! grep tet-functions /opt/.filetool.lst ]; then
   echo etc/init.d/tet-functions >> /opt/.filetool.lst
 fi;
-
-
 
