@@ -1,0 +1,14 @@
+#!/bin/sh
+TCUSER=`cat /etc/sysconfig/tcuser`
+TCHOME="/home/$TCUSER"
+TCSOURCE="$TCHOME/src"
+GIT_FOLDER="tc-diskless-remaster"
+GIT_REPO="https://github.com/chazzam/$GIT_FOLDER.git"
+
+# Checkout the git repo into a $HOME/src directory
+[ -d "$TCSOURCE" ] || mkdir -p "$TCSOURCE";
+cd $"TCSOURCE"
+git clone $GIT_REPO;
+cd $GIT_FOLDER;
+chown $TCUSER:staff -R "./" 
+

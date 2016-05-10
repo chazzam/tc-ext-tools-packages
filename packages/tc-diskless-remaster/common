@@ -1,0 +1,19 @@
+PACKAGE="tc-diskless-remaster"
+VERSION="20160428"
+SOURCE="git::https://github.com/chazzam/tc-diskless-remaster.git"
+BUILD_DEPENDS="
+git.tcz
+expat2.tcz
+curl.tcz
+perl5.tcz
+"
+
+DESCRIPTION="Python utility to help remaster the initrd image for Tiny Core Linux."
+AUTHOR="chazzam"
+SITE="https://github.com/chazzam/tc-diskless-remaster/"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version"
