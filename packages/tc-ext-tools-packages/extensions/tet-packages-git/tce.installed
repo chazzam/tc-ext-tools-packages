@@ -9,8 +9,8 @@ TET_PKGS="$TET/packages";
 GIT_PKGS="$TCSOURCE/$GIT_FOLDER/packages";
 
 # Checkout the git repo into a $HOME/src directory
-[ -d "$TCSOURCE" ] || sudo -u $TCUSER mkdir -p "$TCSOURCE";
-cd $"TCSOURCE"
+[ -d "$TCSOURCE" ] || sudo -u $TCUSER mkdir -p $TCSOURCE;
+cd $TCSOURCE
 sudo -u $TCUSER git clone $GIT_REPO;
 cd $GIT_FOLDER;
 chown $TCUSER:staff -R $TCSOURCE;
