@@ -9,17 +9,17 @@ TET_PKGS="$TET/packages";
 GIT_PKGS="$TCSOURCE/$GIT_FOLDER/packages";
 
 # Checkout the git repo into a $HOME/src directory
-[ -d "$TCSOURCE" ] || mkdir -p "$TCSOURCE";
+[ -d "$TCSOURCE" ] || sudo -u $TCUSER mkdir -p "$TCSOURCE";
 cd $"TCSOURCE"
-git clone $GIT_REPO;
+sudo -u $TCUSER git clone $GIT_REPO;
 cd $GIT_FOLDER;
-chown $TCUSER:staff -R ./ 
+chown $TCUSER:staff -R $TCSOURCE;
 
 # symlink the packages into the tc-ext-tools directory
-[ -d "$TET_PKGS" ] || mkdir -p "$TET_PKGS"
-ln -s $GIT_PKGS/* $TET_PKGS/;
-ln -s batch.sh $TET/
+[ -d "$TET_PKGS" ] || sudo -u $TCUSER mkdir -p "$TET_PKGS"
+sudo -u $TCUSER ln -s $GIT_PKGS/* $TET_PKGS/;
+sudo -u $TCUSER ln -s batch.sh $TET/
+chown $TCUSER:staff -R $TET;
 
-. $TCHOME/.ashrc
-sudo -u $TCUSER update-tet-database
-
+# make the packages exist
+sudo -u $TCUSER update-tet-database;
