@@ -6,11 +6,11 @@ GIT_FOLDER="tc-ext-tools";
 GIT_REPO="https://github.com/chazzam/${GIT_FOLDER}.git";
 GIT_DIR="$TCSOURCE/$GIT_FOLDER";
 
-[ -d "$TCSOURCE" ] || mkdir "$TCSOURCE";
+[ -d "$TCSOURCE" ] || sudo -u $TCUSER mkdir "$TCSOURCE";
 cd "$TCSOURCE";
-git clone $GIT_REPO;
+sudo -u $TCUSER git clone $GIT_REPO;
 cd $GIT_FOLDER;
-chown $TCUSER:staff -R "./" 
+chown $TCUSER:staff -R "$TCSOURCE";
 
 DESTDIR="$TCHOME/.local"
 BINDIR="$DESTDIR/bin"
@@ -18,25 +18,25 @@ SYSCONFDIR="$DESTDIR/etc"
 DATADIR="$DESTDIR/share"
 CONFDIR="$TCHOME/.config"
 
-mkdir -p "$BINDIR" "$CONFDIR" "$SYSCONFDIR/init.d" "$DATADIR/tet" 2>/dev/null
+sudo -u $TCUSER mkdir -p "$BINDIR" "$CONFDIR" "$SYSCONFDIR/init.d" "$DATADIR/tet" 2>/dev/null
 
 chmod 755 tools/* common/*functions;
 chmod 644 common/config common/build;
 
-ln -s $GIT_DIR/tools/* "$BINDIR"
-ln -s $GIT_DIR/common/config "$SYSCONFDIR/tet.conf"
-ln -s $GIT_DIR/common/build "$DATADIR/tet/build.sample"
-ln -s $GIT_DIR/common/functions "$DATADIR/tet/functions.sh"
-ln -s $GIT_DIR/common/tet-functions "$SYSCONFDIR/init.d/tet-functions"
+sudo -u $TCUSER ln -s $GIT_DIR/tools/* "$BINDIR"
+sudo -u $TCUSER ln -s $GIT_DIR/common/config "$SYSCONFDIR/tet.conf"
+sudo -u $TCUSER ln -s $GIT_DIR/common/build "$DATADIR/tet/build.sample"
+sudo -u $TCUSER ln -s $GIT_DIR/common/functions "$DATADIR/tet/functions.sh"
+sudo -u $TCUSER ln -s $GIT_DIR/common/tet-functions "$SYSCONFDIR/init.d/tet-functions"
 sudo ln -sf $GIT_DIR/common/tet-functions "/etc/init.d/tet-functions"
 
 # Actually copy the config file so we can edit it as needed.
-install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
+sudo -u $TCUSER install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
 
 
 # source tc-ext-tools shell environment functions in user's b?ashrc
 for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
-  [ -f "$shrc" ] || touch "$shrc"
+  [ -f "$shrc" ] || sudo -u $TCUSER touch "$shrc"
   if ! grep tet-functions $shrc >/dev/null; then
     echo "Applying changes to shell environment"
     echo "You need to relogin or reboot your computer for changes to take effect"
