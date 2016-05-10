@@ -31,7 +31,7 @@ sudo -u $TCUSER ln -s $GIT_DIR/common/tet-functions "$SYSCONFDIR/init.d/tet-func
 sudo ln -sf $GIT_DIR/common/tet-functions "/etc/init.d/tet-functions"
 
 # Actually copy the config file so we can edit it as needed.
-sudo -u $TCUSER install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
+install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
 
 
 # source tc-ext-tools shell environment functions in user's b?ashrc

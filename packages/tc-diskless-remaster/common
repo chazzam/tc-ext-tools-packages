@@ -1,5 +1,5 @@
 PACKAGE="tc-diskless-remaster"
-VERSION="20160428"
+VERSION="20160510"
 SOURCE="git::https://github.com/chazzam/tc-diskless-remaster.git"
 BUILD_DEPENDS="
 git.tcz
@@ -16,4 +16,4 @@ MAINTAINERS="chazzam"
 TAGS=""
 COMMENTS="---"
 CHANGELOG="---"
-CURRENT="First Version"
+CURRENT="updated to ${VERSION}"

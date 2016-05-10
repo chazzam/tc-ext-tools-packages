@@ -4,7 +4,7 @@ TCHOME="/home/$TCUSER";
 
 # source tc-ext-tools shell environment functions in user's b?ashrc
 for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
-  [ -f "$shrc" ] || touch "$shrc"
+  [ -f "$shrc" ] || sudo -u $TCUSER touch "$shrc"
   if ! grep tet-functions $shrc >/dev/null; then
     echo "Applying changes to shell environment"
     echo "You need to relogin or reboot your computer for changes to take effect"
@@ -14,7 +14,5 @@ done
 
 echo etc/init.d/tet-functions >> /opt/.filetool.lst
 
-install -D -m 644 /usr/local/share/tet/config.sample "$TCHOME/.config/tet.conf"
-
-chown $TCUSER:staff -R "$TCHOME/.config/tet.conf" 
+install -D -m 644 -o $TCUSER -g staff /usr/local/share/tet/config.sample "$TCHOME/.config/tet.conf"
 
