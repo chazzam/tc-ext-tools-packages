@@ -5,7 +5,7 @@ TCSOURCE="$TCHOME/src"
 GIT_FOLDER="tc-ext-tools-packages"
 GIT_REPO="https://github.com/chazzam/$GIT_FOLDER.git"
 TET="$TCHOME/tc-ext-tools";
-TET_PKGS="$TCHOME/$TET/packages";
+TET_PKGS="$TET/packages";
 GIT_PKGS="$TCSOURCE/$GIT_FOLDER/packages";
 
 # Checkout the git repo into a $HOME/src directory
@@ -13,12 +13,12 @@ GIT_PKGS="$TCSOURCE/$GIT_FOLDER/packages";
 cd $"TCSOURCE"
 git clone $GIT_REPO;
 cd $GIT_FOLDER;
-chown $TCUSER:staff -R "./" 
+chown $TCUSER:staff -R ./ 
 
 # symlink the packages into the tc-ext-tools directory
 [ -d "$TET_PKGS" ] || mkdir -p "$TET_PKGS"
-ln -s "$GIT_PKGS/*" "$TET_PKGS/";
-ln -s batch.sh "$TET/"
+ln -s $GIT_PKGS/* $TET_PKGS/;
+ln -s batch.sh $TET/
 
 . $TCHOME/.ashrc
 sudo -u $TCUSER update-tet-database
