@@ -32,7 +32,7 @@ sudo ln -sf $GIT_DIR/common/tet-functions "/etc/init.d/tet-functions"
 
 # Actually copy the config file so we can edit it as needed.
 install -D -m 644 -o $TCUSER -g staff config.sample "$CONFDIR/tet.conf"
-
+chown $TCUSER:staff -R "$DESTDIR" "$CONFDIR";
 
 # source tc-ext-tools shell environment functions in user's b?ashrc
 for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
@@ -44,7 +44,6 @@ for shrc in "$TCHOME/.ashrc" "$TCHOME/.bashrc"; do
   fi
 done
 
-if [ ! grep tet-functions /opt/.filetool.lst ]; then
+if ! grep tet-functions /opt/.filetool.lst; then
   echo etc/init.d/tet-functions >> /opt/.filetool.lst
 fi;
-

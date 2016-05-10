@@ -6,7 +6,8 @@ GIT_FOLDER="tc-ext-tools-packages"
 GIT_REPO="https://github.com/chazzam/$GIT_FOLDER.git"
 TET="$TCHOME/tc-ext-tools";
 TET_PKGS="$TET/packages";
-GIT_PKGS="$TCSOURCE/$GIT_FOLDER/packages";
+GIT_ROOT="$TCSOURCE/$GIT_FOLDER";
+GIT_PKGS="$GIT_ROOT/packages";
 
 # Checkout the git repo into a $HOME/src directory
 [ -d "$TCSOURCE" ] || sudo -u $TCUSER mkdir -p $TCSOURCE;
@@ -18,7 +19,7 @@ chown $TCUSER:staff -R $TCSOURCE;
 # symlink the packages into the tc-ext-tools directory
 [ -d "$TET_PKGS" ] || sudo -u $TCUSER mkdir -p "$TET_PKGS"
 sudo -u $TCUSER ln -s $GIT_PKGS/* $TET_PKGS/;
-sudo -u $TCUSER ln -s batch.sh $TET/
+sudo -u $TCUSER ln -s $GIT_ROOT/batch.sh $TET/
 chown $TCUSER:staff -R $TET;
 
 # make the packages exist
