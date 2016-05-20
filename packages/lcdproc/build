@@ -1,0 +1,56 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+build_download() {
+  wget "http://downloads.sourceforge.net/project/lcdproc/lcdproc/${VERSION}/lcdproc-${VERSION}.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flcdproc%2F%3Fsource%3Dtyp_redirect&ts=1463714256&use_mirror=jaist" -O lcdproc-${VERSION}.tar.gz
+}
+build_convert() {
+  echo "$(pwd;ls)"
+  tar -zxf "../${PACKAGE_SOURCE_NAME_CONV%%xz}gz" || return 1
+  tar -cJf "../$PACKAGE_SOURCE_NAME_CONV" ./* || return 1
+#  mv -f "$PACKAGE_SOURCE_NAME_CONV" "$_PACKAGE_SRC" || return 1
+}
+
+## configure
+build_configure() {
+   ./configure --prefix=/usr/local --enable-drivers=curses,CFontz,CFontzPacket || return 1
+}
+
+## compile
+build_compile() {
+   make || return 1
+}
+
+## install
+build_install() {
+   make DESTDIR="$I_ROOT" install || return 1
+   # copy the sample .conf files
+   mkdir -p "$I_ROOT/etc" || return 1
+   cp "$PACKAGE_SOURCE_TOPDIR"/*.conf "$PACKAGE_SOURCE_TOPDIR"/clients/lcdproc/*.conf "$I_ROOT"/etc/ || return 1
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+   tet_configure
+   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   tet_package
+   tet_encrypt
+
+}
+
