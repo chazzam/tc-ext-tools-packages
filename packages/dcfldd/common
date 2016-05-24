@@ -1,0 +1,15 @@
+PACKAGE="dcfldd"
+VERSION="1.3.4-1"
+SOURCE="svn:://svn.code.sf.net/p/dcfldd/code/trunk"
+#SOURCE_URL=
+BUILD_DEPENDS=""
+
+DESCRIPTION="A brief description of package."
+AUTHOR="authors of package"
+SITE="http://www.package.com"
+COPYING="GPL-2"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 1.3.4-1"
