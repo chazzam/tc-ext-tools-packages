@@ -1,0 +1,16 @@
+PACKAGE="dhcp"
+VERSION="4.3.4"
+VERSION_DASHED=$(echo $VERSION|tr "." "-")
+SOURCE="https://www.isc.org/downloads/file/dhcp-${VERSION_DASHED}/?version=tar-gz->dhcp-${VERSION}.tar.gz"
+BUILD_DEPENDS=""
+
+DESCRIPTION="DHCP server, client, and relay"
+AUTHOR="Various"
+SITE="http://www.isc.org"
+COPYING="ISC"
+MAINTAINERS="chazzam"
+TAGS="NETWORK CLI"
+COMMENTS="---
+Updated for TC 7.x"
+CHANGELOG="---"
+CURRENT="Updated to Version: ${VERSION}"
