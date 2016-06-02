@@ -1,7 +1,7 @@
 PACKAGE="asterisk-13"
 VERSION="13.1-cert7"
 ASTERISK_BRANCH="13.0"
-DPMA_VERSION="3.0.0"
+DPMA_VERSION="3.0.1"
 G729_VERSION="3.1.7"
 SOURCE="http://downloads.asterisk.org/pub/telephony/certified-asterisk/releases/asterisk-certified-${VERSION}.tar.gz"
 BUILD_DEPENDS="
