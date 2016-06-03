@@ -1,2 +1,3 @@
 usr
-etc
+x-usr/local/etc
+x-usr/local/share/man

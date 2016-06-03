@@ -27,9 +27,6 @@ build_compile() {
 ## install
 build_install() {
    make DESTDIR="$I_ROOT" install || return 1
-   # copy the sample .conf files
-   mkdir -p "$I_ROOT/etc" || return 1
-   cp "$PACKAGE_SOURCE_TOPDIR"/*.conf "$PACKAGE_SOURCE_TOPDIR"/clients/lcdproc/*.conf "$I_ROOT"/etc/ || return 1
 }
 
 ## rules
