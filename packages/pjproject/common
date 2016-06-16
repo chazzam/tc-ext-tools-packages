@@ -1,5 +1,5 @@
 PACKAGE="pjproject"
-VERSION="2.4.5"
+VERSION="2.5.1"
 SOURCE="http://www.pjsip.org/release/${VERSION}/pjproject-${VERSION}.tar.bz2"
 BUILD_DEPENDS="
 openssl
@@ -13,7 +13,4 @@ MAINTAINERS="chazzam"
 TAGS=""
 COMMENTS="---"
 CHANGELOG="---"
-CURRENT="First Version: 2.3
----
-Updated to: ${VERSION}
-"
+CURRENT="Version: ${VERSION}"

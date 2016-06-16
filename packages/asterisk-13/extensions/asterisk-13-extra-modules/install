@@ -3,4 +3,6 @@ usr/lib/asterisk/modules/cel_manager.so
 usr/lib/asterisk/modules/chan_iax2.so
 usr/lib/asterisk/modules/res_calendar.so
 usr/lib/asterisk/modules/res_fax.so
-
+etc/asterisk/res_fax.conf
+etc/asterisk/iax.conf
+etc/asterisk/calendar.conf

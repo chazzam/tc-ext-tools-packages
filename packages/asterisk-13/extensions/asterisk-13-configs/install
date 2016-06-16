@@ -1,1 +1,9 @@
-etc/
+etc/asterisk/
+x-etc/asterisk/chan_dahdi.conf
+x-etc/asterisk/pjsip.conf
+x-etc/asterisk/sip.conf
+x-etc/asterisk/pjsip_notify.conf
+x-etc/asterisk/res_digium_phone.conf.sample
+x-etc/asterisk/res_fax.conf
+x-etc/asterisk/iax.conf
+x-etc/asterisk/calendar.conf

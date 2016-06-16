@@ -1,5 +1,4 @@
-usr/
-etc/
-var/
-x-usr/include
-x-usr/share/man/
+usr/lib/asterisk/modules/res_timing_dahdi.so
+usr/lib/asterisk/modules/chan_dahdi.so
+etc/asterisk/chan_dahdi.conf
+usr/share/dahdi/

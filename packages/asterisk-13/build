@@ -31,6 +31,7 @@ build_configure() {
 build_compile() {
 
   make menuselect-tree menuselect.makeopts >/dev/null;
+  ./menuselect/menuselect --enable chan_sip menuselect.makeopts
   ./menuselect/menuselect --enable app_test menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_CORE_SOUNDS menuselect.makeopts
   ./menuselect/menuselect --disable-category MENUSELECT_MOH menuselect.makeopts
@@ -63,7 +64,9 @@ include_addon() {
 ## install
 build_install() {
 
+  mkdir -p "$I_ROOT"/var/lib/asterisk/sounds "$I_ROOT"/etc/init.d/
   make DESTDIR="$I_ROOT" install config samples || return 1
+  install -Dm0755 "$PACKAGE_SOURCE_TOPDIR"/contrib/init.d/rc.slackware.asterisk "$I_ROOT"/etc/init.d/asterisk || return 1
   
   local arch_bits=${KERNEL_ARCH_DASH##x86-}
   local arch_full=$KERNEL_ARCH
