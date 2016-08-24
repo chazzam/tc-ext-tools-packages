@@ -20,4 +20,11 @@ x-usr/sbin/timertest
 x-usr/sbin/twinstar
 x-usr/sbin/xpp_blink
 x-usr/sbin/xpp_sync
+x-lib/modules/*/kernel/dahdi/wcte11xp.ko
+x-lib/modules/*/kernel/dahdi/wct1xxp.ko
+x-lib/modules/*/kernel/dahdi/wcfxo.ko
+x-lib/modules/*/kernel/dahdi/wctdm.ko
+x-lib/modules/*/kernel/dahdi/xpp/
+x-lib/modules/*/kernel/dahdi/pciradio.ko
+x-lib/modules/*/kernel/dahdi/tor2.ko
 
