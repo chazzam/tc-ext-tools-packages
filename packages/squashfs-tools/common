@@ -1,0 +1,16 @@
+PACKAGE="squashfs-tools"
+VERSION="link"
+SOURCE="custom::"
+BUILD_DEPENDS="
+"
+
+DESCRIPTION="Link to squashfs-tools-4.x for TC4"
+
+AUTHOR="chazzam"
+SITE="http://www.package.com"
+COPYING="GPL-2"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="updated to ${VERSION}"
