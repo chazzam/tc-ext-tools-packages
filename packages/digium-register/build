@@ -32,7 +32,7 @@ build_install() {
 build_rules() {
 
    tet_load
-   tet_prepare
+#   tet_prepare
    tet_download
    tet_convert
    tet_unpack
