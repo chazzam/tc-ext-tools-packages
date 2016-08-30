@@ -44,9 +44,9 @@ build_install() {
     DIR_SOUNDS=${DIR_SOUNDS##/};
     DIR_MOH=${DIR_MOH##/};
     mkdir -p $DIR_SOUNDS $DIR_MOH;
-    download_sounds "$LANGUAGES_CORE" "${TARBALL_CORE/VERSION/VERSION_CORE}" "$DIR_SOUNDS" || exit 1;
-    download_sounds "$LANGUAGES_EXTRA" "${TARBALL_EXTRA/VERSION/VERSION_EXTRA}" "$DIR_SOUNDS" || exit 1;
-    download_sounds "$LANGUAGES_MOH" "${TARBALL_MOH/VERSION/VERSION_MOH}" "$DIR_MOH" || exit 1;
+    download_sounds "$LANGUAGES_CORE" "${TARBALL_CORE/VERSION/$VERSION_CORE}" "$DIR_SOUNDS" || exit 1;
+    download_sounds "$LANGUAGES_EXTRA" "${TARBALL_EXTRA/VERSION/$VERSION_EXTRA}" "$DIR_SOUNDS" || exit 1;
+    download_sounds "$LANGUAGES_MOH" "${TARBALL_MOH/VERSION/$VERSION_MOH}" "$DIR_MOH" || exit 1;
     exit 0;
   ) || return 1;
 }
