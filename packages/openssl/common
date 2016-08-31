@@ -1,0 +1,16 @@
+PACKAGE="openssl"
+VERSION="link"
+SOURCE="custom::"
+BUILD_DEPENDS="
+"
+
+DESCRIPTION="Link to openssl-1.0.0 for TC4"
+
+AUTHOR="chazzam"
+SITE="http://www.package.com"
+COPYING="GPL-2"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="updated to ${VERSION}"

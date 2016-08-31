@@ -1,0 +1,62 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+INSTALL_DIR="$I_ROOT/usr/local/share/tc-imager";
+
+build_download() {
+  echo no downloading needed;
+}
+
+build_convert() {
+  echo no converting needed;
+}
+
+build_unpack() {
+  echo no unpacking needed;
+}
+
+build_patch() {
+  echo no patching needed;
+}
+
+build_configure() {
+  echo no configuration needed;
+}
+
+build_compile() {
+  echo no compilation needed;
+}
+
+## install
+build_install() {
+
+   mkdir -p "$INSTALL_DIR" || return 1
+   cp -ap ${PACKAGE_SRC}/* "${INSTALL_DIR%%/}/"
+
+}
+
+## rules
+build_rules() {
+
+   tet_load
+   tet_download
+   tet_convert
+   tet_unpack
+   tet_patch
+   tet_configure
+   tet_compile
+   tet_install
+   tet_split
+   tet_strip
+   tet_create
+   tet_generate
+   tet_check
+   tet_test
+   #tet_package
+   #tet_encrypt
+
+}
+
