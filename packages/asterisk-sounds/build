@@ -21,31 +21,44 @@ build_compile() {
   echo "no compilation needed";
 }
 
+download_formats() {
+  local dl="$1"
+  local dir="$2"
+  for f in $FORMATS; do
+    $wget -- ${dl/FORMAT/$f} 2>/dev/null| tar -zx -C $dir;
+  done;
+}
+
 download_sounds() {
   local langs="$1";
   local tarball="$2";
   local dir="$3";
-  local wget="wget -w2 --random-wait -nv --show-progress --no-check-certificate -O-";
+  local wget="wget -w2 --random-wait -nv --no-check-certificate -O-";
   local l;
 
   for l in $langs; do
     local dl="${URL_ASTERISK_SOUNDS%%/}/${tarball/LANGUAGE/$l}";
     local dir_lang=${dir%%/}/$l;
     mkdir "$dir_lang";
-    for f in $FORMATS; do
-      $wget -- ${dl/FORMAT/$f} 2>/dev/null| tar -zx -C $dir_lang;
-    done;
+    touch "$dir_lang/core-sounds-${l}.txt";
+    download_formats "$dl" "$dir_lang";
   done;
+  if [ -z "$langs" ]; then
+    local moh_dl="${URL_ASTERISK_SOUNDS%%/}/${tarball}";
+    download_formats "$moh_dl" "${dir%%/}/";
+  fi
 }
 
 build_install() {
   ( 
+    mkdir -p $I_ROOT;
     cd $I_ROOT;
     DIR_SOUNDS=${DIR_SOUNDS##/};
     DIR_MOH=${DIR_MOH##/};
     mkdir -p $DIR_SOUNDS $DIR_MOH;
     download_sounds "$LANGUAGES_CORE" "${TARBALL_CORE/VERSION/$VERSION_CORE}" "$DIR_SOUNDS" || exit 1;
     download_sounds "$LANGUAGES_EXTRA" "${TARBALL_EXTRA/VERSION/$VERSION_EXTRA}" "$DIR_SOUNDS" || exit 1;
+    set -x
     download_sounds "$LANGUAGES_MOH" "${TARBALL_MOH/VERSION/$VERSION_MOH}" "$DIR_MOH" || exit 1;
     exit 0;
   ) || return 1;
@@ -68,8 +81,8 @@ build_rules() {
    tet_generate
    tet_check
    tet_test
-   tet_package
-   tet_encrypt
+#   tet_package
+#   tet_encrypt
 
 }
 
