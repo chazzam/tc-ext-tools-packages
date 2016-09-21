@@ -9,4 +9,5 @@ BOOT_SCRIPT="/root/.profile"
 
 for p in fsck-all smart-all shred-all check-smart-all; do
   ln -s /usr/local/bin/$p $TCHOME/
+  ln -s /usr/local/bin/$p /root/
 done
