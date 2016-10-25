@@ -1,5 +1,5 @@
 PACKAGE="libnewt"
-VERSION="0.52.18"
+VERSION="0.52.19"
 SOURCE="https://fedorahosted.org/releases/n/e/newt/newt-${VERSION}.tar.gz"
 BUILD_DEPENDS="gettext
 slang
@@ -15,4 +15,4 @@ MAINTAINERS="chazzam"
 TAGS=""
 COMMENTS="---"
 CHANGELOG="---"
-CURRENT="First Version 0.52.18"
+CURRENT="Updated to Version: ${VERSION}"
