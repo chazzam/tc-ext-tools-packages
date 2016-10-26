@@ -1,5 +1,5 @@
 PACKAGE="libjansson"
-VERSION="2.7"
+VERSION="2.9"
 SOURCE="http://www.digip.org/jansson/releases/jansson-${VERSION}.tar.gz"
 BUILD_DEPENDS=""
 
@@ -11,4 +11,4 @@ MAINTAINERS="chazzam"
 TAGS=""
 COMMENTS="---"
 CHANGELOG="---"
-CURRENT="First Version"
+CURRENT="Updating to Version ${VERSION}"
