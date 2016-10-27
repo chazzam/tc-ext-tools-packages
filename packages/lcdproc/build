@@ -27,6 +27,8 @@ build_compile() {
 ## install
 build_install() {
    make DESTDIR="$I_ROOT" install || return 1
+   [ -d "${I_ROOT%%/}/usr/local/" ] || mkdir -p "${I_ROOT%%/}/usr/local/"
+   cp -ap ${PACKAGE_SRC}/* "${I_ROOT%%/}/usr/local/" || return 1
 }
 
 ## rules
