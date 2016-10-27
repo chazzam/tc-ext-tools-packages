@@ -17,13 +17,12 @@ build_compile() {
 ## install
 build_install() {
   mkdir -p "$I_ROOT/usr/local/etc" "$I_ROOT/usr/local/bin";
-  install -Dm 0755 tests/bin/* "$I_ROOT/usr/local/bin/"
-  install -D tests/etc/* "$I_ROOT/usr/local/etc/";
+  install -Dm 0755 bin/* "$I_ROOT/usr/local/bin/"
+  install -D etc/* "$I_ROOT/usr/local/etc/";
 }
 
 ## rules
 build_rules() {
-
    tet_load
    tet_download
    tet_convert
@@ -40,6 +39,5 @@ build_rules() {
    tet_test
    tet_package
    tet_encrypt
-
 }
 
