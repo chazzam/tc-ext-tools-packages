@@ -1,0 +1,17 @@
+#!/bin/sh
+
+if [ ! -d /usr/local/etc ]; then
+  mkdir -p /usr/local/etc
+fi
+
+if [ ! -f /usr/local/etc/smartd.conf ]; then
+  cp -p /usr/local/share/smartmontools/files/smartd.conf /usr/local/etc
+fi
+
+if [ ! -d /usr/local/share/smartmontools ]; then
+  mkdir -p /usr/local/share/smartmontools
+fi
+
+if [ ! -f /usr/local/share/smartmontools/drivedb.h ]; then
+  cp -p /usr/local/share/smartmontools/files/drivedb.h /usr/local/share/smartmontools
+fi

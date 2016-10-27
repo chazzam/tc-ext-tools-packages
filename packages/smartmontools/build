@@ -1,0 +1,55 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+if [ "${KERNEL_ARCH}" = "x86" ]; then
+  export CFLAGS="-march=i486 -mtune=i686 -Os -pipe"
+  export CXXFLAGS="-march=i486 -mtune=i686 -Os -pipe"
+  export LDFLAGS="-Wl,-O1"
+elif [ "${KERNEL_ARCH}" = "x86_64" ]; then
+  export CFLAGS="-mtune=generic -Os -pipe"
+  export CXXFLAGS="-mtune=generic -Os -pipe"
+  export LDFLAGS="-Wl,-O1"
+fi
+
+## configure
+build_configure() {
+  ./configure --prefix=/usr/local || return 1
+}
+
+## compile
+build_compile() {
+  make || return 1
+}
+
+## install
+build_install() {
+  make DESTDIR="$I_ROOT" install || return 1
+  mv "$I_ROOT"/usr/local/etc/smartd.conf "$I_ROOT"/usr/local/etc/smartd.conf.sample
+  mkdir -p "$I_ROOT"/usr/local/share/smartmontools/files/
+  cp "$I_ROOT"/usr/local/share/doc/smartmontools/smartd.conf "$I_ROOT"/usr/local/share/smartmontools/files/
+  mv "$I_ROOT"/usr/local/share/smartmontools/*.* "$I_ROOT"/usr/local/share/smartmontools/files/
+}
+
+## rules
+build_rules() {
+  tet_load
+  tet_download
+  tet_convert
+  tet_unpack
+  tet_patch
+  tet_configure
+  tet_compile
+  tet_install
+  tet_split
+  tet_strip
+  tet_create
+  tet_generate
+  tet_check
+  tet_test
+  tet_package
+  tet_encrypt
+}
+

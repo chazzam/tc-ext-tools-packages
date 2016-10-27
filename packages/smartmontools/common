@@ -1,0 +1,23 @@
+PACKAGE="smartmontools"
+VERSION="6.5"
+#SOURCE="http://garr.dl.sourceforge.net/sourceforge/smartmontools/smartmontools-{VERSION}.tar.gz"
+SOURCE="http://downloads.sourceforge.net/project/smartmontools/smartmontools/${VERSION}/smartmontools-${VERSION}.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Fsmartmontools%2Ffiles%2Fsmartmontools%2F${VERSION}%2F&ts=1475272727->smartmontools-${VERSION}.tar.gz"
+BUILD_DEPENDS=""
+
+DESCRIPTION="smartmontools"
+AUTHOR="see site"
+SITE="https://www.smartmontools.org/"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS="smart hd disk test tool"
+COMMENTS="S.M.A.R.T. is a system in modern hard drives designed to..
+                ..report conditions that may indicate impending failure
+                ----------
+                Howto:
+                $ sudo smartctl -i /dev/hda
+                see http://blog.shadypixel.com/monitoring-hard-drive-health-on-linux-with-smartmontools
+                $ sudo  /usr/local/etc/init.d/smartd
+                /usr/local/etc/init.d/smartd [start|stop|restart|status]
+                $ sudo update-smart-drivedb"
+CHANGELOG="---"
+CURRENT="Updated 6.1 to ${VERSION}"
