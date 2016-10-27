@@ -4,32 +4,25 @@
 #                                                                                          #
 ############################################################################################
 
-MY_FLAGS="-m32 -mtune=generic -march=i686";
+MY_FLAGS="-m32";
+CC_ARGS="-flto -fuse-linker-plugin -march=i486 -mtune=i686 -Os -pipe"
+[ "$KERNEL_ARCH" = "x86_64" ] && CC_ARGS="-flto -fuse-linker-plugin -mtune=generic -Os -pipe"
+[ -z "$CC" ] && CC="gcc $CC_ARGS" && export CC
+[ -z "$CXX" ] && CXX="g++ $CC_ARGS"
+[ ! -z "$CXX" ] && CXX="$CXX -fno-exceptions -fno-rtti" && export CXX
 CFLAGS="$CFLAGS $MY_FLAGS";
 CXXFLAGS="$CXXFLAGS $MY_FLAGS";
-  LDFLAGS="$LDFLAGS -z muldefs";
-export CFLAGS;
-export CXXFLAGS;
-  export LDFLAGS;
+LDFLAGS="$LDFLAGS -z muldefs";
+export CFLAGS CXXFLAGS LDFLAGS;
           
 ## configure
 build_configure() {
-
   ## autotools
-  MY_FLAGS="-m32 -mtune=generic -march=i686";
-  CFLAGS="$CFLAGS $MY_FLAGS";
-  CXXFLAGS="$CXXFLAGS $MY_FLAGS";
-  LDFLAGS="$LDFLAGS -z muldefs";
-  export CFLAGS;
-  export CXXFLAGS;
-  export LDFLAGS;
   CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" ./configure --disable-xmldoc --host=i686-linux-gnu --target=i686-linux-gnu || exit 1
-
 }
 
 ## compile
 build_compile() {
-
   make menuselect-tree menuselect.makeopts >/dev/null;
   ./menuselect/menuselect --enable chan_sip menuselect.makeopts
   ./menuselect/menuselect --enable app_test menuselect.makeopts
@@ -46,7 +39,6 @@ build_compile() {
   fi
 
   CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" make $make_j|| return 1
-
 }
 
 include_addon() {
@@ -63,7 +55,6 @@ include_addon() {
 
 ## install
 build_install() {
-
   mkdir -p "$I_ROOT"/var/lib/asterisk/sounds "$I_ROOT"/etc/init.d/
   make DESTDIR="$I_ROOT" install config samples || return 1
   install -Dm0755 "$PACKAGE_SOURCE_TOPDIR"/contrib/init.d/rc.slackware.asterisk "$I_ROOT"/etc/init.d/asterisk || return 1
@@ -78,13 +69,15 @@ build_install() {
   include_addon "$dpma_base_url/asterisk-${ASTERISK_BRANCH}/$KERNEL_ARCH_DASH" "$dpma_tar" || return 1
   # Get g729
   local base_url="http://downloads.digium.com/pub/telephony/codec_g729"
-  local tarball="codec_g729a-${ASTERISK_BRANCH}_${G729_VERSION}-generic_${arch_bits}.tar.gz"
+  local tarball="codec_g729a-${ASTERISK_BRANCH}_${G729_VERSION}-${arch_full}.tar.gz"
+  if [ "${G729_VERSION##*.}" -le 7 ] && [ "${G729_VERSION%.*}" = "3.1" ]; then
+    tarball="codec_g729a-${ASTERISK_BRANCH}_${G729_VERSION}-generic_${arch_bits}.tar.gz"
+  fi
   include_addon "$base_url/asterisk-${ASTERISK_BRANCH}/$KERNEL_ARCH_DASH" "$tarball" || return 1
 }
 
 ## rules
 build_rules() {
-
    tet_load
    tet_download
    tet_convert
@@ -101,6 +94,4 @@ build_rules() {
    tet_test
    tet_package
    tet_encrypt
-
 }
-
