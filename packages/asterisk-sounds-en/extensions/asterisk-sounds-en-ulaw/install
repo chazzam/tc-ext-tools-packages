@@ -1,0 +1,6 @@
+var/lib/asterisk/sounds/en/*.ulaw
+var/lib/asterisk/sounds/en/*/*.ulaw
+var/lib/asterisk/sounds/en/CHANGES*
+var/lib/asterisk/sounds/en/CREDITS*
+var/lib/asterisk/sounds/en/LICENSE*
+var/lib/asterisk/sounds/en/*.txt
