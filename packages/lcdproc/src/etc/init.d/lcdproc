@@ -15,6 +15,14 @@
 #limitations under the License.
 
 do_start() {
+  # check for /dev/lcd* first
+  LCD="$(find /dev -name 'lcd*'|head -n1)"
+  # if no /dev/lcd*, check for a /dev/ttyUSB*
+  [ -z "$LCD" ] || LCD="$(find /dev -name 'ttyUSB*'|head -n1)"
+  # if no potential LCD device, don't start lcdproc
+  [ -z "$LCD" ] && return
+  # Device=/dev/ttyUSB0
+  sed -i -e "s#Device=.*#Device=$LCD#" /usr/local/etc/LCDd.conf
   /usr/local/sbin/LCDd -c /usr/local/etc/LCDd.conf || return 1
   echo "$!" > /var/run/LCDd.pid
   /usr/local/bin/lcdproc -c /usr/local/etc/lcdproc.conf || return 1
@@ -23,8 +31,8 @@ do_start() {
 
 do_stop() {
   # go get the pid, and kill the process
-  /bin/kill $(cat /var/run/lcdproc.pid)
-  /bin/kill $(cat /var/run/LCDd.pid)
+  [ -f "/var/run/lcdproc.pid" ] && /bin/kill $(cat /var/run/lcdproc.pid)
+  [ -f "/var/run/LCDd.pid" ] && /bin/kill $(cat /var/run/LCDd.pid)
 }
 
 case "$1" in
