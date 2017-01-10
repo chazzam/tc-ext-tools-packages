@@ -23,10 +23,14 @@ do_start() {
   [ -z "$LCD" ] && return
   # Device=/dev/ttyUSB0
   sed -i -e "s#Device=.*#Device=$LCD#" /usr/local/etc/LCDd.conf
-  /usr/local/sbin/LCDd -c /usr/local/etc/LCDd.conf || return 1
-  echo "$!" > /var/run/LCDd.pid
-  /usr/local/bin/lcdproc -c /usr/local/etc/lcdproc.conf || return 1
-  echo "$!" > /var/run/lcdproc.pid
+  if [ ! -r /var/run/LCDd.pid ]; then
+    /usr/local/sbin/LCDd -c /usr/local/etc/LCDd.conf || return 1
+    echo "$!" > /var/run/LCDd.pid
+  fi
+  if [ ! -r /var/run/lcdproc.pid ]; then
+    /usr/local/bin/lcdproc -c /usr/local/etc/lcdproc.conf || return 1
+    echo "$!" > /var/run/lcdproc.pid
+  fi
 }
 
 do_stop() {
