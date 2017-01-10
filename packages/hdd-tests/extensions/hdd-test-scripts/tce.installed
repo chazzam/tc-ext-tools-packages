@@ -4,10 +4,12 @@ TCHOME="/home/$TCUSER"
 
 BOOT_SCRIPT="/root/.profile"
 [ -z "$(grep fsck $BOOT_SCRIPT)" ] && \
-  echo "/usr/local/bin/fsck-all yes short" >> $BOOT_SCRIPT
-#  echo "openvt -s -w /bin/bash /usr/local/bin/fsck-all" >> $BOOT_SCRIPT
+  echo "/usr/local/bin/run-site" >> $BOOT_SCRIPT
+  #echo "/usr/local/bin/fsck-all yes short" >> $BOOT_SCRIPT
 
 for p in fsck-all smart-all shred-all check-smart-all; do
   ln -s /usr/local/bin/$p $TCHOME/
   ln -s /usr/local/bin/$p /root/
 done
+
+chown -R $TCUSER:staff $TCHOME

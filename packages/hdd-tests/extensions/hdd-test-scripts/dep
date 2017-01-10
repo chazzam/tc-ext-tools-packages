@@ -5,5 +5,5 @@ file.tcz
 e2fsprogs.tcz
 smartmontools.tcz
 coreutils.tcz
-tester-lcd.tcz
+lcdproc-hdd-tests.tcz
 
