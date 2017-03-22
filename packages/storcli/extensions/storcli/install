@@ -1,0 +1,5 @@
+usr/local
+x-usr/local/include
+x-usr/local/lib/pkgconfig
+x-usr/local/lib/*.a
+x-usr/local/lib/*.la
