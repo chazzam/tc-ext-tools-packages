@@ -1,6 +1,7 @@
 PACKAGE="hdd-tests"
 VERSION="0.5.3"
 SOURCE="git::https://github.com/chazzam/tc-hdd-tools.git"
+#GIT_FLAGS="--branch development"
 BUILD_DEPENDS=""
 
 DESCRIPTION="test scripts for helping automate HDD maintenance"

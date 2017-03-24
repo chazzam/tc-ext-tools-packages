@@ -1,7 +1,8 @@
 PACKAGE="lcdproc"
 VERSION="0.5.7"
-SOURCE="custom::"
-SOURCE_URL="http://downloads.sourceforge.net/project/lcdproc/lcdproc/${VERSION}/lcdproc-${VERSION}.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flcdproc%2F%3Fsource%3Dtyp_redirect&ts=1463714256&use_mirror=jaist"
+#SOURCE="custom::"
+#SOURCE_URL="http://downloads.sourceforge.net/project/lcdproc/lcdproc/${VERSION}/lcdproc-${VERSION}.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flcdproc%2F%3Fsource%3Dtyp_redirect&ts=1463714256&use_mirror=jaist"
+SOURCE="http://downloads.sourceforge.net/project/lcdproc/lcdproc/${VERSION}/lcdproc-${VERSION}.tar.gz?r=https%3A%2F%2Fsourceforge.net%2Fprojects%2Flcdproc%2F%3Fsource%3Dtyp_redirect->lcdproc-${VERSION}.tar.gz"
 BUILD_DEPENDS="
 ncurses-dev"
 
