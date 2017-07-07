@@ -4,10 +4,12 @@ VERSION="2.11.1+2.11.1"
 SOURCE="http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/releases/dahdi-linux-complete-${VERSION}.tar.gz"
 BUILD_DEPENDS="
 automake
-libnewt
-libnewt-dev
 module-init-tools
 perl5
+popt
+slang
+libnewt
+libnewt-dev
 "
 #linux-headers-KERNEL
 

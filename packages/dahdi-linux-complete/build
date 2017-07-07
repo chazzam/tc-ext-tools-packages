@@ -21,7 +21,7 @@ build_compile() {
      patch -p0 < ${PACKAGE_SRC}/patches/Makefile.patch || return 1
      make || return 1
      cd tools
-     make tests fxstest || return 1
+     make tests fxstest dahdi_tool || return 1
      cd ..
    fi;  
 
