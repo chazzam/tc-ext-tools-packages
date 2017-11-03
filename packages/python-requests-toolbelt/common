@@ -1,0 +1,21 @@
+PACKAGE="python-requests-toolbelt"
+VERSION="0.8.0"
+PACKAGES_STRING="
+requests
+requests-toolbelt==$VERSION"
+
+SOURCE="https://bootstrap.pypa.io/get-pip.py"
+BUILD_DEPENDS="
+python
+python-requests
+"
+
+DESCRIPTION="Python 2, Requests Toolbelt library"
+AUTHOR="authors of package"
+SITE="https://toolbelt.readthedocs.io/en/latest/"
+COPYING="Apache-2.0"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 0.8.0"

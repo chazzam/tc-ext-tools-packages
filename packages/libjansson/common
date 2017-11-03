@@ -1,5 +1,5 @@
 PACKAGE="libjansson"
-VERSION="2.9"
+VERSION="2.10"
 SOURCE="http://www.digip.org/jansson/releases/jansson-${VERSION}.tar.gz"
 BUILD_DEPENDS=""
 

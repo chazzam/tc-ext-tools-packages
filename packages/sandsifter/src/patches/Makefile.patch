@@ -1,0 +1,10 @@
+diff --git a/Makefile b/Makefile
+index b54a0a0..7ecd175 100644
+--- a/Makefile
++++ b/Makefile
+@@ -38,4 +38,4 @@ injector: injector.o
+ 	$(CC) $(CFLAGS) -c $< -o $@ -Wall
+ 
+ clean:
+-	rm -f *.o injector
++	-rm -f *.o injector

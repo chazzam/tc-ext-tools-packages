@@ -22,10 +22,12 @@ x-usr/lib/asterisk/modules/res_pjsip.so
 x-usr/lib/asterisk/modules/res_pjsip_acl.so
 x-usr/lib/asterisk/modules/res_pjsip_authenticator_digest.so
 x-usr/lib/asterisk/modules/res_pjsip_caller_id.so
+x-usr/lib/asterisk/modules/res_pjsip_config_wizard.so
 x-usr/lib/asterisk/modules/res_pjsip_dialog_info_body_generator.so
 x-usr/lib/asterisk/modules/res_pjsip_diversion.so
 x-usr/lib/asterisk/modules/res_pjsip_dlg_options.so
 x-usr/lib/asterisk/modules/res_pjsip_dtmf_info.so
+x-usr/lib/asterisk/modules/res_pjsip_empty_info.so
 x-usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_anonymous.so
 x-usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_dpma.so
 x-usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_ip.so
@@ -56,6 +58,7 @@ x-usr/lib/asterisk/modules/res_pjsip_rfc3326.so
 x-usr/lib/asterisk/modules/res_pjsip_sdp_rtp.so
 x-usr/lib/asterisk/modules/res_pjsip_send_to_voicemail.so
 x-usr/lib/asterisk/modules/res_pjsip_session.so
+x-usr/lib/asterisk/modules/res_pjsip_sips_contact.so
 x-usr/lib/asterisk/modules/res_pjsip_t38.so
 x-usr/lib/asterisk/modules/res_pjsip_transport_management.so
 x-usr/lib/asterisk/modules/res_pjsip_transport_websocket.so

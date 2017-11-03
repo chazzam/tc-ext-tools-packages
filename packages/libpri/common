@@ -1,8 +1,11 @@
 PACKAGE="libpri"
-VERSION="1.5.0"
+VERSION="1.6.0"
 SOURCE="http://downloads.asterisk.org/pub/telephony/libpri/releases/libpri-${VERSION}.tar.gz"
 BUILD_DEPENDS="
-dahdi-complete-dev"
+module-init-tools
+dahdi-complete
+dahdi-complete-dev
+"
 
 DESCRIPTION="Primary Rate ISDN specification library"
 AUTHOR="asterisk.org"

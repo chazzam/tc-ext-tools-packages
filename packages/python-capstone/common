@@ -1,0 +1,20 @@
+PACKAGE="python-capstone"
+VERSION="3.0.4"
+PACKAGES_STRING="
+capstone==$VERSION"
+
+SOURCE="https://bootstrap.pypa.io/get-pip.py"
+BUILD_DEPENDS="
+python
+bash
+"
+
+DESCRIPTION="Python Capstone library"
+AUTHOR="authors of package"
+SITE="https://pypi.python.org/pypi/capstone/"
+COPYING="Apache-2.0"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 3.0.4"

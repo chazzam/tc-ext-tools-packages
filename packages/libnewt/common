@@ -1,6 +1,6 @@
 PACKAGE="libnewt"
 VERSION="0.52.20"
-SOURCE="https://fedorahosted.org/releases/n/e/newt/newt-${VERSION}.tar.gz"
+SOURCE="https://releases.pagure.org/newt/newt-${VERSION}.tar.gz"
 BUILD_DEPENDS="gettext
 slang
 slang-dev

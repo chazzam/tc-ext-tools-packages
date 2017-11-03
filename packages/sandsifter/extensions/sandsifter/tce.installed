@@ -1,0 +1,61 @@
+#!/bin/sh
+TCUSER=`cat /etc/sysconfig/tcuser`
+TCHOME="/home/$TCUSER"
+
+export TERM='xterm-256color'
+echo export TERM='xterm-256color' >> $TCHOME/.profile
+
+(
+cat <<EOF
+#!/bin/sh
+ARGS_SIFTER_DEFAULT="--unk --dis --len --sync --tick"
+ARGS_SIFTER_LOWMEM="--low-mem"
+ARGS_SIFTER_SAVE="--save"
+ARGS_SIFTER_RESUME="--resume"
+ARGS_SIFTER_NOGUI="--no-gui"
+
+ARGS_INJECTOR_DEFAULT="-- -P1 -t"
+ARGS_INJECTOR_LOWMEM="-N"
+
+ARGS_SIFTER="$ARGS_SIFTER_DEFAULT"
+ARGS_INJECTOR="$ARGS_INJECTOR_DEFAULT"
+RESUME=""
+
+for i in "$@"; do
+  case $i in
+    mem)
+      ARGS_SIFTER="$ARGS_SIFTER $ARGS_LOWMEM";
+      ARGS_INJECTOR="$ARGS_INJECTOR $ARGS_INJECTOR_LOWMEM"
+    ;;
+    resume)
+      ARGS_SIFTER="$ARGS_SIFTER $ARGS_RESUME";
+      RESUME="1"
+    ;;
+    gui)
+      ARGS_SIFTER="$ARGS_SIFTER $ARGS_NOGUI";
+    ;;
+    -h|--help|help)
+      cat <<EOG
+
+usage $0: [mem] [resume] [gui]
+  mem     - adds:: sifter:$ARGS_SIFTER_LOWMEM injector:$ARGS_INJECTOR_LOWMEM
+  resume  - adds:: sifter:$ARGS_SIFTER_RESUME injector: removes:: sifter:$ARGS_SIFTER_SAVE injector:
+  gui     - adds:: sifter:$ARGS_SIFTER_NOGUI injector: 
+
+default args:: sifter:$ARGS_SIFTER $ARGS_SIFTER_SAVE injector:$ARGS_INJECTOR
+
+EOG
+      exit 1;
+    ;;
+  esac
+done;
+
+[ -z "$RESUME" ] || ARGS_SIFTER="$ARGS_SIFTER $ARGS_SIFTER_SAVE"
+export TERM='xterm-256color'
+( cd /usr/local/share/sandsifter;
+  sudo TERM='xterm-256color' ./sifter.py $ARGS_SIFTER $ARGS_INJECTOR;
+)
+EOF
+) > $TCHOME/launch-sifter.sh
+chmod +x $TCHOME/launch-sifter.sh
+sudo cp -ap $TCHOME/launch-sifter.sh /root/

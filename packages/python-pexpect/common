@@ -1,0 +1,21 @@
+PACKAGE="python-pexpect"
+VERSION="4.2.1"
+PACKAGES_STRING="
+ptyprocess==0.5.2
+pexpect==$VERSION
+"
+
+SOURCE="https://bootstrap.pypa.io/get-pip.py"
+BUILD_DEPENDS="
+python
+"
+
+DESCRIPTION="Python 2, pexpect library"
+AUTHOR="authors of package"
+SITE="http://docs.python-requests.org/en/master/"
+COPYING="Apache-2.0"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 4.2.1"

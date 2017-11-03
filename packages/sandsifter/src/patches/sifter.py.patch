@@ -1,0 +1,430 @@
+diff --git a/sifter.py b/sifter.py
+index 31df54a..dc6b4a3 100755
+--- a/sifter.py
++++ b/sifter.py
+@@ -244,7 +244,7 @@ class Injector:
+             stdin=subprocess.PIPE,
+             preexec_fn=os.setsid
+             )
+-        
++
+     def stop(self):
+         if self.process:
+             try:
+@@ -354,13 +354,14 @@ class Gui:
+     COLOR_RED =   19
+     COLOR_GREEN = 20
+ 
+-    def __init__(self, ts, injector, tests, do_tick, disassembler=disas_capstone):
++    def __init__(self, ts, injector, tests, do_tick, disassembler=disas_capstone, full_display=True):
+         self.ts = ts;
+         self.injector = injector
+         self.T = tests
+         self.gui_thread = None
+         self.do_tick = do_tick
+         self.ticks = 0
++        self.full_display = full_display
+ 
+         self.last_ins_count = 0
+         self.delta_log = deque(maxlen=self.RATE_Q)
+@@ -368,25 +369,25 @@ class Gui:
+ 
+         self.disas = disassembler
+ 
+-        self.stdscr = curses.initscr()
+-        curses.start_color()
++        if full_display:
++            self.stdscr = curses.initscr()
++            curses.start_color()
+ 
+-        # doesn't work
+-        # self.orig_colors = [curses.color_content(x) for x in xrange(256)]
++            # doesn't work
++            # self.orig_colors = [curses.color_content(x) for x in xrange(256)]
+ 
+-        curses.use_default_colors()
+-        curses.noecho()
+-        curses.cbreak()
+-        curses.curs_set(0)
+-        self.stdscr.nodelay(1)
++            curses.use_default_colors()
++            curses.noecho()
++            curses.cbreak()
++            curses.curs_set(0)
++            self.stdscr.nodelay(1)
+ 
+-        self.sx = 0
+-        self.sy = 0
++            self.init_colors()
+ 
+-        self.init_colors()
+-
+-        self.stdscr.bkgd(curses.color_pair(self.WHITE))
++            self.stdscr.bkgd(curses.color_pair(self.WHITE))
+ 
++        self.sx = 0
++        self.sy = 0
+         self.last_time = time.time()
+ 
+     def init_colors(self):
+@@ -469,7 +470,8 @@ class Gui:
+ 
+     def draw(self):
+         try:
+-            self.stdscr.erase()
++            if self.full_display:
++                self.stdscr.erase()
+ 
+             # constants
+             left = self.sx + self.INDENT
+@@ -480,12 +482,13 @@ class Gui:
+             op_width = 45
+             raw_width = (16*2)
+ 
+-            # render log bracket
+-            self.bracket(self.stdscr, left - 1, top, top_bracket_height + 2, self.gray(1))
++            if self.full_display:
++                # render log bracket
++                self.bracket(self.stdscr, left - 1, top, top_bracket_height + 2, self.gray(1))
+ 
+-            # render logo
+-            self.vaddstr(self.stdscr, left - 3, top + top_bracket_middle - 5, "sand", self.gray(.2))
+-            self.vaddstr(self.stdscr, left - 3, top + top_bracket_middle + 5, "sifter", self.gray(.2))
++                # render logo
++                self.vaddstr(self.stdscr, left - 3, top + top_bracket_middle - 5, "sand", self.gray(.2))
++                self.vaddstr(self.stdscr, left - 3, top + top_bracket_middle + 5, "sifter", self.gray(.2))
+ 
+             # refresh instruction log
+             synth_insn = cstr2py(self.T.r.raw_insn)
+@@ -499,67 +502,68 @@ class Gui:
+                     )
+                 )
+ 
+-            # render instruction log
+-            try:
+-                for (i, r) in enumerate(self.T.il):
+-                    line = i + self.T.IL - len(self.T.il)
+-                    (mnemonic, op_str, length, raw) = r
+-                    if i == len(self.T.il) - 1:
+-                        # latest instruction
+-                        # mnemonic
+-                        self.stdscr.addstr(
+-                                top + 1 + line,
+-                                left,
+-                                "%*s " % (mne_width, mnemonic),
+-                                self.gray(1)
+-                                )
+-                        # operands
+-                        self.stdscr.addstr(
+-                                top + 1 + line,
+-                                left + (mne_width + 1),
+-                                "%-*s " % (op_width, op_str),
+-                                curses.color_pair(self.BLUE)
+-                                )
+-                        # bytes
+-                        if self.maxx > left + (mne_width + 1) + (op_width + 1) + (raw_width + 1):
++            if self.full_display:
++                # render instruction log
++                try:
++                    for (i, r) in enumerate(self.T.il):
++                        line = i + self.T.IL - len(self.T.il)
++                        (mnemonic, op_str, length, raw) = r
++                        if i == len(self.T.il) - 1:
++                            # latest instruction
++                            # mnemonic
+                             self.stdscr.addstr(
+                                     top + 1 + line,
+-                                    left + (mne_width + 1) + (op_width + 1),
+-                                    "%s" % raw[0:length * 2],
+-                                    self.gray(.9)
+-                                    )
+-                            self.stdscr.addstr(
+-                                    top + 1 +line,
+-                                    left + (mne_width + 1) + (op_width + 1) + length * 2,
+-                                    "%s" % raw[length * 2:raw_width],
+-                                    self.gray(.3)
++                                    left,
++                                    "%*s " % (mne_width, mnemonic),
++                                    self.gray(1)
+                                     )
+-                    else:
+-                        # previous instructions
+-                        # mnemonic, operands
+-                        self.stdscr.addstr(
+-                                top + 1 + line,
+-                                left,
+-                                "%*s %-*s" % (mne_width, mnemonic, op_width, op_str), 
+-                                self.gray(.5)
+-                                )
+-                        # bytes
+-                        if self.maxx > left + (mne_width + 1) + (op_width + 1) + (raw_width + 1):
++                            # operands
+                             self.stdscr.addstr(
+                                     top + 1 + line,
+-                                    left + (mne_width + 1) + (op_width + 1),
+-                                    "%s" % raw[0:length * 2],
+-                                    self.gray(.3)
++                                    left + (mne_width + 1),
++                                    "%-*s " % (op_width, op_str),
++                                    curses.color_pair(self.BLUE)
+                                     )
++                            # bytes
++                            if self.maxx > left + (mne_width + 1) + (op_width + 1) + (raw_width + 1):
++                                self.stdscr.addstr(
++                                        top + 1 + line,
++                                        left + (mne_width + 1) + (op_width + 1),
++                                        "%s" % raw[0:length * 2],
++                                        self.gray(.9)
++                                        )
++                                self.stdscr.addstr(
++                                        top + 1 +line,
++                                        left + (mne_width + 1) + (op_width + 1) + length * 2,
++                                        "%s" % raw[length * 2:raw_width],
++                                        self.gray(.3)
++                                        )
++                        else:
++                            # previous instructions
++                            # mnemonic, operands
+                             self.stdscr.addstr(
+                                     top + 1 + line,
+-                                    left + (mne_width + 1) + (op_width + 1) + length * 2,
+-                                    "%s" % raw[length * 2:raw_width],
+-                                    self.gray(.1)
++                                    left,
++                                    "%*s %-*s" % (mne_width, mnemonic, op_width, op_str),
++                                    self.gray(.5)
+                                     )
+-            except RuntimeError:
+-                # probably the deque was modified by the poller
+-                pass
++                            # bytes
++                            if self.maxx > left + (mne_width + 1) + (op_width + 1) + (raw_width + 1):
++                                self.stdscr.addstr(
++                                        top + 1 + line,
++                                        left + (mne_width + 1) + (op_width + 1),
++                                        "%s" % raw[0:length * 2],
++                                        self.gray(.3)
++                                        )
++                                self.stdscr.addstr(
++                                        top + 1 + line,
++                                        left + (mne_width + 1) + (op_width + 1) + length * 2,
++                                        "%s" % raw[length * 2:raw_width],
++                                        self.gray(.1)
++                                        )
++                except RuntimeError:
++                    # probably the deque was modified by the poller
++                    pass
+ 
+             # rate calculation
+             self.delta_log.append(self.T.ic - self.last_ins_count)
+@@ -568,46 +572,52 @@ class Gui:
+             self.time_log.append(ctime - self.last_time)
+             self.last_time = ctime
+             rate = int(sum(self.delta_log)/sum(self.time_log))
+-
+-            # render timestamp
+-            if self.maxx > left + (mne_width + 1) + (op_width + 1) + (raw_width + 1):
+-                self.vaddstr(
+-                        self.stdscr,
+-                        left + (mne_width + 1) + (op_width + 1) + (raw_width + 1),
+-                        top + 1,
+-                        self.T.elapsed(),
+-                        self.gray(.5)
+-                        )
+-
+-            # render injection settings
+-            self.stdscr.addstr(top + 1, left - 8, "%d" % self.injector.settings.root, self.gray(.1))
+-            self.stdscr.addstr(top + 1, left - 7, "%s" % arch, self.gray(.1))
+-            self.stdscr.addstr(top + 1, left - 3, "%c" % self.injector.settings.synth_mode, self.gray(.5))
+-
+-            # render injection results
+-            self.stdscr.addstr(top + top_bracket_middle, left - 6, "v:", self.gray(.5))
+-            self.stdscr.addstr(top + top_bracket_middle, left - 4, "%2x" % self.T.r.valid)
+-            self.stdscr.addstr(top + top_bracket_middle + 1, left - 6, "l:", self.gray(.5))
+-            self.stdscr.addstr(top + top_bracket_middle + 1, left - 4, "%2x" % self.T.r.length)
+-            self.stdscr.addstr(top + top_bracket_middle + 2, left - 6, "s:", self.gray(.5))
+-            self.stdscr.addstr(top + top_bracket_middle + 2, left - 4, "%2x" % self.T.r.signum)
+-            self.stdscr.addstr(top + top_bracket_middle + 3, left - 6, "c:", self.gray(.5))
+-            self.stdscr.addstr(top + top_bracket_middle + 3, left - 4, "%2x" % self.T.r.sicode)
+-            
+-            # render instruction count
+-            self.stdscr.addstr(top + top_bracket_height + 2, left, "#", self.gray(.5))
+-            self.stdscr.addstr(top + top_bracket_height + 2, left + 2, 
+-                    "%s" % (int_to_comma(self.T.ic)), self.gray(1))
+-            # render rate
+-            self.stdscr.addstr(top + top_bracket_height + 3, left, 
+-                    "  %d/s%s" % (rate, " " * min(rate / self.RATE_FACTOR, 100)), curses.A_REVERSE)
+-            # render artifact count
+-            self.stdscr.addstr(top + top_bracket_height + 4, left, "#", self.gray(.5))
+-            self.stdscr.addstr(top + top_bracket_height + 4, left + 2, 
+-                    "%s" % (int_to_comma(self.T.ac)), curses.color_pair(self.RED))
++            if not self.full_display and self.ticks % 1000 == 0:
++                sys.stdout.write("{}..".format(self.last_ins_count))
++                sys.stdout.flush()
++                if self.ticks % 6000 == 0:
++                    print("")
++
++            if self.full_display:
++                # render timestamp
++                if self.maxx > left + (mne_width + 1) + (op_width + 1) + (raw_width + 1):
++                    self.vaddstr(
++                            self.stdscr,
++                            left + (mne_width + 1) + (op_width + 1) + (raw_width + 1),
++                            top + 1,
++                            self.T.elapsed(),
++                            self.gray(.5)
++                            )
++
++                # render injection settings
++                self.stdscr.addstr(top + 1, left - 8, "%d" % self.injector.settings.root, self.gray(.1))
++                self.stdscr.addstr(top + 1, left - 7, "%s" % arch, self.gray(.1))
++                self.stdscr.addstr(top + 1, left - 3, "%c" % self.injector.settings.synth_mode, self.gray(.5))
++
++                # render injection results
++                self.stdscr.addstr(top + top_bracket_middle, left - 6, "v:", self.gray(.5))
++                self.stdscr.addstr(top + top_bracket_middle, left - 4, "%2x" % self.T.r.valid)
++                self.stdscr.addstr(top + top_bracket_middle + 1, left - 6, "l:", self.gray(.5))
++                self.stdscr.addstr(top + top_bracket_middle + 1, left - 4, "%2x" % self.T.r.length)
++                self.stdscr.addstr(top + top_bracket_middle + 2, left - 6, "s:", self.gray(.5))
++                self.stdscr.addstr(top + top_bracket_middle + 2, left - 4, "%2x" % self.T.r.signum)
++                self.stdscr.addstr(top + top_bracket_middle + 3, left - 6, "c:", self.gray(.5))
++                self.stdscr.addstr(top + top_bracket_middle + 3, left - 4, "%2x" % self.T.r.sicode)
++
++                # render instruction count
++                self.stdscr.addstr(top + top_bracket_height + 2, left, "#", self.gray(.5))
++                self.stdscr.addstr(top + top_bracket_height + 2, left + 2,
++                        "%s" % (int_to_comma(self.T.ic)), self.gray(1))
++                # render rate
++                self.stdscr.addstr(top + top_bracket_height + 3, left,
++                        "  %d/s%s" % (rate, " " * min(rate / self.RATE_FACTOR, 100)), curses.A_REVERSE)
++                # render artifact count
++                self.stdscr.addstr(top + top_bracket_height + 4, left, "#", self.gray(.5))
++                self.stdscr.addstr(top + top_bracket_height + 4, left + 2,
++                        "%s" % (int_to_comma(self.T.ac)), curses.color_pair(self.RED))
+ 
+             # render artifact log
+-            if self.maxy >= top + top_bracket_height + 5 + self.T.UL + 2:
++            if self.full_display and self.maxy >= top + top_bracket_height + 5 + self.T.UL + 2:
+ 
+                 # render artifact bracket
+                 self.bracket(self.stdscr, left - 1, top + top_bracket_height + 5, self.T.UL + 2, self.gray(1))
+@@ -629,15 +639,16 @@ class Gui:
+                         random_string = ("%02x" % random.randint(0,100)) * (raw_width-2)
+                         self.stdscr.addstr(top + 1 + y, left, random_string, curses.color_pair(self.BLACK))
+ 
+-                        self.stdscr.addstr(top + 1 + y, left + 1, 
++                        self.stdscr.addstr(top + 1 + y, left + 1,
+                                 "%s" % insn_hex[0:r.length * 2], curses.color_pair(self.RED))
+-                        self.stdscr.addstr(top + 1 + y, left + 1 + r.length * 2, 
++                        self.stdscr.addstr(top + 1 + y, left + 1 + r.length * 2,
+                                 "%s" % insn_hex[r.length * 2:raw_width], self.gray(.25))
+                 except RuntimeError:
+                     # probably the deque was modified by the poller
+                     pass
+ 
+-            self.stdscr.refresh()
++            if self.full_display:
++                self.stdscr.refresh()
+         except curses.error:
+             pass
+ 
+@@ -649,6 +660,8 @@ class Gui:
+         self.gui_thread.join()
+ 
+     def checkkey(self):
++        if not self.full_display:
++            return
+         c = self.stdscr.getch()
+         if c == ord('p'):
+             self.ts.pause = not self.ts.pause
+@@ -667,11 +680,11 @@ class Gui:
+             while self.ts.pause:
+                 self.checkkey()
+                 time.sleep(.1)
++            if self.full_display:
++                (self.maxy,self.maxx) = self.stdscr.getmaxyx()
+ 
+-            (self.maxy,self.maxx) = self.stdscr.getmaxyx()
+-
+-            self.sx = 1
+-            self.sy = max((self.maxy + 1 - (self.T.IL + self.T.UL + 5 + 2))/2, 0)
++                self.sx = 1
++                self.sy = max((self.maxy + 1 - (self.T.IL + self.T.UL + 5 + 2))/2, 0)
+ 
+             self.checkkey()
+ 
+@@ -711,7 +724,7 @@ def dump_artifacts(r, injector, command_line):
+ 
+     cpu = get_cpu_info()
+     for l in cpu:
+-        tee.write("# %s\n" % l) 
++        tee.write("# %s\n" % l)
+ 
+     tee.write("# %s  v  l  s  c\n" % (" " * 28))
+     for k in sorted(list(r.ad)):
+@@ -734,9 +747,10 @@ def cleanup(gui, poll, injector, ts, tests, command_line, args):
+             curses.init_color(i, c[0], c[1], c[2])
+     '''
+ 
+-    curses.nocbreak();
+-    curses.echo()
+-    curses.endwin()
++    if gui.full_display:
++        curses.nocbreak();
++        curses.echo()
++        curses.endwin()
+ 
+     dump_artifacts(tests, injector, command_line)
+ 
+@@ -791,6 +805,10 @@ def main():
+     parser.add_argument("--low-mem", action="store_true", default=False,
+             help="do not store results in memory"
+             )
++    parser.add_argument("--injector", default="./injector",
++            help="specify path to injector")
++    parser.add_argument("--no-gui", action="store_true", default=False,
++            help="do not run curses gui")
+     parser.add_argument("injector_args", nargs=argparse.REMAINDER)
+ 
+     args = parser.parse_args()
+@@ -818,12 +836,19 @@ def main():
+     if not os.path.exists(OUTPUT):
+         os.makedirs(OUTPUT)
+ 
+-    injector_bitness, errors = \
+-        subprocess.Popen(
+-                ['file', INJECTOR],
+-                stdout=subprocess.PIPE,
+-                stderr=subprocess.PIPE
+-                ).communicate()
++    INJECTOR = args.injector
++    if not os.path.exists(INJECTOR) and INJECTOR == "./injector":
++        INJECTOR = os.path.join(os.path.dirname(sys.argv[0]), "injector")
++    try:
++        injector_bitness, errors = \
++            subprocess.Popen(
++                    ['file', INJECTOR],
++                    stdout=subprocess.PIPE,
++                    stderr=subprocess.PIPE
++                    ).communicate()
++    except OSError as e:
++        print("bad Injector: {} or other failure.\n{}".format(INJECTOR, e))
++        sys.exit(1)
+     arch = re.search(r".*(..)-bit.*", injector_bitness).group(1)
+ 
+     ts = ThreadState()
+@@ -836,11 +861,12 @@ def main():
+     injector = Injector(settings)
+     injector.start()
+ 
+-    poll = Poll(ts, injector, tests, command_line, args.sync, 
++    poll = Poll(ts, injector, tests, command_line, args.sync,
+                     args.low_mem, args.unk, args.len, args.dis, args.ill)
+     poll.start()
++    gui_display = not args.no_gui
+ 
+-    gui = Gui(ts, injector, tests, args.tick)
++    gui = Gui(ts, injector, tests, args.tick, full_display=gui_display)
+     gui.start()
+ 
+     while ts.run:

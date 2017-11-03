@@ -1,0 +1,24 @@
+PACKAGE="python-requests"
+VERSION="2.18.4"
+PACKAGES_STRING="
+urllib3==1.22
+idna==2.6
+chardet==3.0.4
+certifi==2017.7.27.1
+requests==$VERSION"
+# installed certifi-2017.7.27.1 chardet-3.0.4 idna-2.6 requests-2.18.4 urllib3-1.22
+
+SOURCE="https://bootstrap.pypa.io/get-pip.py"
+BUILD_DEPENDS="
+python
+"
+
+DESCRIPTION="Python 2, Requests library"
+AUTHOR="authors of package"
+SITE="http://docs.python-requests.org/en/master/"
+COPYING="Apache-2.0"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="Updated to Version: 2.18.4, and idna==2.6"

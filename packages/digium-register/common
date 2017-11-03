@@ -3,7 +3,7 @@ KERNEL_ARCH_DASH="${KERNEL_ARCH/_/-}"
 if [ "$KERNEL_ARCH_DASH" = "x86" ]; then
   KERNEL_ARCH_DASH="x86-32"
 fi
-VERSION="2012-11-28"
+VERSION="2016-12-01"
 SOURCE="custom::http://downloads.digium.com/pub/register/${KERNEL_ARCH_DASH}/"
 BUILD_DEPENDS="
 "

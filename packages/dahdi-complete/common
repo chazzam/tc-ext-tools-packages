@@ -1,7 +1,8 @@
 PACKAGE="dahdi-complete"
 VERSION="2.10.2+2.10.2"
 SOURCE="custom::"
-BUILD_DEPENDS=""
+BUILD_DEPENDS="
+"
 
 DESCRIPTION="Fake package to more easily change DAHDI versions in existing packages"
 AUTHOR="Charles Moye"

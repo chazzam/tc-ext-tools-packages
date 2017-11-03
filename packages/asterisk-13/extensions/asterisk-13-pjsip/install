@@ -6,10 +6,12 @@ usr/lib/asterisk/modules/res_pjsip.so
 usr/lib/asterisk/modules/res_pjsip_acl.so
 usr/lib/asterisk/modules/res_pjsip_authenticator_digest.so
 usr/lib/asterisk/modules/res_pjsip_caller_id.so
+usr/lib/asterisk/modules/res_pjsip_config_wizard.so
 usr/lib/asterisk/modules/res_pjsip_dialog_info_body_generator.so
 usr/lib/asterisk/modules/res_pjsip_diversion.so
 usr/lib/asterisk/modules/res_pjsip_dlg_options.so
 usr/lib/asterisk/modules/res_pjsip_dtmf_info.so
+usr/lib/asterisk/modules/res_pjsip_empty_info.so
 usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_anonymous.so
 usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_dpma.so
 usr/lib/asterisk/modules/res_pjsip_endpoint_identifier_ip.so
@@ -18,7 +20,6 @@ usr/lib/asterisk/modules/res_pjsip_exten_state.so
 usr/lib/asterisk/modules/res_pjsip_header_funcs.so
 usr/lib/asterisk/modules/res_pjsip_logger.so
 usr/lib/asterisk/modules/res_pjsip_messaging.so
-usr/lib/asterisk/modules/res_pjsip_multihomed.so
 usr/lib/asterisk/modules/res_pjsip_mwi.so
 usr/lib/asterisk/modules/res_pjsip_mwi_body_generator.so
 usr/lib/asterisk/modules/res_pjsip_nat.so
@@ -40,6 +41,7 @@ usr/lib/asterisk/modules/res_pjsip_rfc3326.so
 usr/lib/asterisk/modules/res_pjsip_sdp_rtp.so
 usr/lib/asterisk/modules/res_pjsip_send_to_voicemail.so
 usr/lib/asterisk/modules/res_pjsip_session.so
+usr/lib/asterisk/modules/res_pjsip_sips_contact.so
 usr/lib/asterisk/modules/res_pjsip_t38.so
 usr/lib/asterisk/modules/res_pjsip_transport_management.so
 usr/lib/asterisk/modules/res_pjsip_transport_websocket.so

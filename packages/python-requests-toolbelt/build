@@ -1,0 +1,53 @@
+############################################################################################
+#                                                                                          #
+#    package build functions: configure, compile, install, rules, and custom functions     #
+#                                                                                          #
+############################################################################################
+
+build_convert() {
+  cd ..;
+  tar -cJf "$PACKAGE_SOURCE_NAME_CONV" get-pip.py || return 1
+  mv -f "$PACKAGE_SOURCE_NAME_CONV" "$_PACKAGE_SRC" || return 1
+  rm get-pip.py
+}
+
+## configure
+build_configure() {
+  # Make sure pip is installed and up-to-date
+  python get-pip.py --user --force-reinstall -I || return 1
+}
+
+## compile
+build_compile() {
+  echo "skipping unneeded compile"
+}
+
+## install
+build_install() {
+  PYTHON_MAJORS=$(python -V 2>&1|egrep -o [0-9]+\.[0-9]+|head -n1)
+  PYTHON_DIR_PREFIX=usr/local/lib/python${PYTHON_MAJORS}/site-packages
+  pip install --isolated --force-reinstall -I \
+      -t "$I_ROOT/$PYTHON_DIR_PREFIX" \
+      $PACKAGES_STRING || return 1
+}
+
+## rules
+build_rules() {
+  tet_load
+  tet_download
+  tet_convert
+  tet_unpack
+  tet_patch
+  tet_configure
+  tet_compile
+  tet_install
+  tet_split
+  tet_strip
+  tet_create
+  tet_generate
+  tet_check
+  tet_test
+  tet_package
+  tet_encrypt
+}
+

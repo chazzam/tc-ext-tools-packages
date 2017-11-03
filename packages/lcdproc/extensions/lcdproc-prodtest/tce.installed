@@ -15,7 +15,11 @@
 #limitations under the License.
 
 cd /usr/local/etc/
-[ -f LCDd.conf ] || mv LCDd.conf.cfontzpacket LCDd.conf
-[ -f lcdproc.conf ] || mv lcdproc.conf.prodtest lcdproc.conf
+if ! diff -wus LCDd.conf.cfontzpacket LCDd.conf >/dev/null 2>&1; then
+  cp LCDd.conf.cfontzpacket LCDd.conf
+fi;
+if ! diff -wus lcdproc.conf.prodtest lcdproc.conf >/dev/null 2>&1; then
+  cp lcdproc.conf.prodtest lcdproc.conf
+fi;
 
 /usr/local/etc/init.d/lcdproc start

@@ -1,0 +1,19 @@
+PACKAGE="python-pyserial"
+VERSION="3.4"
+PACKAGES_STRING="
+pyserial==$VERSION"
+
+SOURCE="https://bootstrap.pypa.io/get-pip.py"
+BUILD_DEPENDS="
+python
+"
+
+DESCRIPTION="Python 2, PySerial library"
+AUTHOR="authors of package"
+SITE="https://pythonhosted.org/pyserial/"
+COPYING="Apache-2.0"
+MAINTAINERS="tc"
+TAGS=""
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="First Version: 3.4"

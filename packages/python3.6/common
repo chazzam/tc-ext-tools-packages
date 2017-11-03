@@ -1,0 +1,21 @@
+PACKAGE="python3.6"
+VERSION="3.6.3"
+SOURCE="https://www.python.org/ftp/python/$VERSION/Python-$VERSION.tar.xz"
+BUILD_DEPENDS="
+openssl-dev
+ncurses-dev
+readline-dev
+sqlite3-dev
+liblzma-dev
+bzip2-dev
+"
+
+DESCRIPTION="Python 3.6 for TinyCore 4.x"
+AUTHOR="See SITE below"
+SITE="https://www.python.org"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS="python python3.6 python3.6.1"
+COMMENTS="---"
+CHANGELOG="---"
+CURRENT="Updated Version: $VERSION"
