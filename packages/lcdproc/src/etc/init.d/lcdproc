@@ -18,7 +18,15 @@ do_start() {
   # check for /dev/lcd* first
   LCD="$(find /dev -name 'lcd*'|head -n1)"
   # if no /dev/lcd*, check for a /dev/ttyUSB*
-  [ -z "$LCD" ] && LCD="$(find /dev -name 'ttyUSB*'|head -n1)"
+  #[ -z "$LCD" ] && LCD="$(find /dev -name 'ttyUSB*'|head -n1)"
+  # ABSOLUTELY NEVER JUST CHECK FOR A ttyUSB*
+
+  # try triggering udev again if no lcd device
+  if [ -z "$LCD" ]; then
+    udevadm trigger --action=add >/dev/null 2>&1
+    sleep 1;sync;
+    LCD="$(find /dev -name 'lcd*'|head -n1)"
+  fi
   # if no potential LCD device, don't start lcdproc
   [ -z "$LCD" ] && return
   # Device=/dev/ttyUSB0
@@ -35,8 +43,10 @@ do_start() {
 
 do_stop() {
   # go get the pid, and kill the process
-  [ -f "/var/run/lcdproc.pid" ] && /bin/kill $(cat /var/run/lcdproc.pid)
-  [ -f "/var/run/LCDd.pid" ] && /bin/kill $(cat /var/run/LCDd.pid)
+  [ -f "/var/run/lcdproc.pid" ] && /bin/kill $(cat /var/run/lcdproc.pid) >/dev/null 2>&1
+  [ -f "/var/run/LCDd.pid" ] && /bin/kill $(cat /var/run/LCDd.pid) >/dev/null 2>&1
+  rm -f /var/run/LCDd.pid /var/run/lcdproc.pid
+  [ "$(ps -ef|grep -ci lcd)" -le "1" ] || killall LCDd
 }
 
 case "$1" in
