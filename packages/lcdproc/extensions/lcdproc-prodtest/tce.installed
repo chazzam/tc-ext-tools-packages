@@ -22,4 +22,4 @@ if ! diff -wus lcdproc.conf.prodtest lcdproc.conf >/dev/null 2>&1; then
   cp lcdproc.conf.prodtest lcdproc.conf
 fi;
 
-/usr/local/etc/init.d/lcdproc start
+/usr/local/etc/init.d/lcdproc start &

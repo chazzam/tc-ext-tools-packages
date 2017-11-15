@@ -23,6 +23,7 @@ do_start() {
 
   # try triggering udev again if no lcd device
   if [ -z "$LCD" ]; then
+    sleep 10;
     udevadm trigger --action=add >/dev/null 2>&1
     sleep 1;sync;
     LCD="$(find /dev -name 'lcd*'|head -n1)"
