@@ -1,0 +1,7 @@
+KERNEL_ARCH=x86
+KERNEL_VER="${KERNEL%-tinycore}"
+KERNEL_MIRROR="${TCMIRROR}/${TCVER}/x86/release/src/kernel"
+LINUX_SOURCE="linux-${KERNEL_VER}-patched.txz"
+KERNEL_CONFIG="config-${KERNEL}"
+LINUX_DIR="linux-${KERNEL_VER}"
+KERNEL_SYMVERS="Module.symvers-$KERNEL.gz"
