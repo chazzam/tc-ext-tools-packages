@@ -36,14 +36,12 @@ usr/lib/asterisk/modules/res_pjsip_publish_asterisk.so
 usr/lib/asterisk/modules/res_pjsip_pubsub.so
 usr/lib/asterisk/modules/res_pjsip_refer.so
 usr/lib/asterisk/modules/res_pjsip_registrar.so
-usr/lib/asterisk/modules/res_pjsip_registrar_expire.so
 usr/lib/asterisk/modules/res_pjsip_rfc3326.so
 usr/lib/asterisk/modules/res_pjsip_sdp_rtp.so
 usr/lib/asterisk/modules/res_pjsip_send_to_voicemail.so
 usr/lib/asterisk/modules/res_pjsip_session.so
 usr/lib/asterisk/modules/res_pjsip_sips_contact.so
 usr/lib/asterisk/modules/res_pjsip_t38.so
-usr/lib/asterisk/modules/res_pjsip_transport_management.so
 usr/lib/asterisk/modules/res_pjsip_transport_websocket.so
 usr/lib/asterisk/modules/res_pjsip_xpidf_body_generator.so
 usr/lib/asterisk/modules/res_rtp_asterisk.so

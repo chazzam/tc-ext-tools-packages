@@ -1,7 +1,8 @@
 PACKAGE="asterisk-13"
-VERSION="13.13-cert9"
+#VERSION="13.13-cert9"
+VERSION="13.21-cert3"
 ASTERISK_BRANCH="13.0"
-DPMA_VERSION="3.4.3"
+DPMA_VERSION="3.5.0"
 G729_VERSION="3.1.9"
 SOURCE="http://downloads.asterisk.org/pub/telephony/certified-asterisk/releases/asterisk-certified-${VERSION}.tar.gz"
 BUILD_DEPENDS="
@@ -15,6 +16,7 @@ libxml2
 libxml2-dev
 libxslt
 module-init-tools
+ncurses-dev
 python-dev
 dahdi-complete
 dahdi-complete-dev

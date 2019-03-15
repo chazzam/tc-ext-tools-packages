@@ -1,7 +1,1 @@
-lib/modules/*/kernel/dahdi/wcte11xp.ko
-lib/modules/*/kernel/dahdi/wct1xxp.ko
-lib/modules/*/kernel/dahdi/wcfxo.ko
-lib/modules/*/kernel/dahdi/wctdm.ko
 lib/modules/*/kernel/dahdi/xpp/
-lib/modules/*/kernel/dahdi/pciradio.ko
-lib/modules/*/kernel/dahdi/tor2.ko
