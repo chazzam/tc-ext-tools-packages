@@ -1,0 +1,26 @@
+PACKAGE="lshw"
+VERSION="B.02.18"
+SOURCE="https://www.ezix.org/software/files/lshw-$VERSION.tar.gz"
+BUILD_DEPENDS=""
+
+DESCRIPTION="A brief description of package."
+AUTHOR="Lyonel Vincent"
+SITE="http://ezix.org/project/wiki/HardwareLiSter"
+COPYING="GPL-2"
+MAINTAINERS="chazzam"
+TAGS="lshw Hardware Lister"
+COMMENTS="
+                lshw (Hardware Lister) is a small tool to provide
+                detailed information on the hardware configuration of the
+                machine.
+                It can report exact memory configuration, firmware
+                version, mainboard configuration, CPU version and speed,
+                cache configuration, bus speed, etc.
+
+                Information can be output in plain text, XML or HTML.
+
+                For man entries you can visit:
+                    http://linux.die.net/man/1/lshw
+"
+CHANGELOG="---"
+CURRENT="Updated to version: B.02.18"

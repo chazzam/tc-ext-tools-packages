@@ -4,24 +4,41 @@
 #                                                                                          #
 ############################################################################################
 
-MY_FLAGS="-m32";
-CC_ARGS="-flto -fuse-linker-plugin -march=i486 -mtune=i686 -Os -pipe"
-[ "$KERNEL_ARCH" = "x86_64" ] && CC_ARGS="-flto -fuse-linker-plugin -mtune=generic -Os -pipe"
-[ -z "$CC" ] && CC="gcc $CC_ARGS" && export CC
-[ -z "$CXX" ] && CXX="g++ $CC_ARGS"
-[ ! -z "$CXX" ] && CXX="$CXX -fno-exceptions -fno-rtti" && export CXX
-CFLAGS="$CFLAGS $MY_FLAGS";
-CXXFLAGS="$CXXFLAGS $MY_FLAGS";
-LDFLAGS="$LDFLAGS -z muldefs";
-export CFLAGS CXXFLAGS LDFLAGS;
+[ -z "$ASTERISK_COMPILE_FLAGS" ] && ASTERISK_COMPILE_FLAGS=0;
+if [ "$ASTERISK_COMPILE_FLAGS" = "0" ]; then
+  MY_FLAGS="-m32";
+  [ "$KERNEL_ARCH" = "x86_64" ] && MY_FLAGS="-m64";
+  CC_ARGS="-flto -fuse-linker-plugin -march=i486 -mtune=i686 -Os -pipe"
+  [ "$KERNEL_ARCH" = "x86_64" ] && CC_ARGS="-flto -fuse-linker-plugin -mtune=generic -Os -pipe"
+  [ -z "$CC" ] && CC="gcc $CC_ARGS" && export CC
+  [ -z "$CXX" ] && CXX="g++ $CC_ARGS"
+  [ ! -z "$CXX" ] && CXX="$CXX -fno-exceptions -fno-rtti";
+  CFLAGS="$CFLAGS $MY_FLAGS";
+  CXXFLAGS="$CXXFLAGS $MY_FLAGS";
+  LDFLAGS="$LDFLAGS -z muldefs";
+  ASTERISK_COMPILE_FLAGS=1
+fi
+export CC CXX CFLAGS CXXFLAGS LDFLAGS ASTERISK_COMPILE_FLAGS;
 
 ## configure
 build_configure() {
+  echo CC="$CC"
+  echo CXX="$CXX"
+  echo CFLAGS="$CFLAGS"
+  echo CXXFLAGS="$CXXFLAGS"
+  echo LDFLAGS="$LDFLAGS"
+ 
   ## autotools
-  CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+  if [ "$KERNEL_ARCH" = "x86_64" ]; then
+    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
+    ./configure --disable-xmldoc \
+      --with-pjproject-bundled || exit 1;
+  else
+    CFLAGS="$CFLAGS" CXXFLAGS="$CXXFLAGS" LDFLAGS="$LDFLAGS" \
     ./configure --disable-xmldoc \
       --host=i686-linux-gnu --target=i686-linux-gnu \
-      --with-pjproject-bundled || exit 1
+      --with-pjproject-bundled || exit 1;
+  fi
 }
 
 ## compile
